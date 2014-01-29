@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>reveal.js - The HTML Presentation Framework</title>
+
+    <meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+    <meta name="author" content="Hakim El Hattab">
+
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.min.css">
+    <link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+        document.write('<link rel="stylesheet" href="css/print/' + ( window.location.search.match(/print-pdf/gi) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">');
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <h1>Scala Real World</h1>
+
+            <div style="margin-top:200px">
+                <img src="https://cdn1.iconfinder.com/data/icons/cat-power/128/cat_purr.png">
+            </div>
+            <div class="absolute-element"
+                 style="position: absolute; width: 314px; height: 46px; z-index: 4; left: 321px; top: 567px;">
+                <span>by Roksana Seletska, Levi9</span>
+                <br>
+            </div>
+
+        </section>
+        <section>
+            <h2>Plan</h2>
+
+            <div style="display:block; margin-left:80px">
+                <div style="text-align: left;">I. Introduction to language</div>
+                <div style="text-align: left;">II. Types magic</div>
+                <div style="text-align: left;">III. Asynchronous design</div>
+                <div style="text-align: left;">IV. Asynchronous web</div>
+            </div>
+        </section>
+        <section>
+            <section>
+                <h2>I. LANGUAGE:Values</h2>
+                <h4>Powerful type inference</h4>
+               <pre>
+            <code class="scala">
+            val a = "string"
+            //val a:String
+            val b = List(("to" , ("Where", "go?")))
+            // b: List[(String, (String, String))] <-- sugared
+            // b: List[Tuple2[String, Tuple2[String, String]]]
+            Option("hey")//Some(hey)
+            Option(null)//None
+            </code>
+               </pre>
+                <h4>Operators reload</h4>
+               <pre>
+                        <code class="scala">
+                            val a = 3
+                            val b = 4
+                            a.+(b) == a + b //true
+                        </code>
+                </pre>
+            </section>
+            <section>
+                <h2>I. LANGUAGE:Import</h2>
+                    <pre>
+                        <code class="scala">
+                            import b.B
+                            class HelloWorld{
+                                import a.A
+                                def sum = A+B
+                            }
+                        </code>
+                </pre>
+            </section>
+            <section>
+                <h2>I. LANGUAGE:everything has a type</h2>
+                    <pre>
+                        <code class="scala">
+                            val cake = if(x>1) 25
+                        </code>
+                </pre>
+                <h3>What type does cake have?</h3>
+                <div class="fragment">
+                    Any
+                </div>
+            </section>
+            <section>
+                <h2>I. LANGUAGE:prefer immutable</h2>
+                    <pre>
+                        <code class="scala">
+                            val list = List(("Mimi","cat"))
+                            list.::("Polariod","dog")
+                        </code>
+                </pre>
+                <h3>Is list changed?</h3>
+                <div class="fragment">
+                    No, to make it changeable you need to use class <span style="color: rgb(227, 206, 171)">mutable.List</span>
+                </div>
+            </section>
+            <section>
+                <h2>I. LANGUAGE:apply</h2>
+                <pre>
+                    <code class="scala">
+                    class BigInt{
+                        def apply(s:String):BigInt
+                    }
+                    </code>
+                </pre>
+                <h3>Thats why we can do:</h3>
+                <pre>
+                    <code class="scala">
+                    (BigInt("2") * BigInt("3")).toString // 6
+                    "Hello World"(0)// H
+                    </code>
+                </pre>
+            </section>
+            <section>
+                <h2>I. LANGUAGE:unapply, unapplySeq</h2>
+                <div>Thats why we can do pattern match to many scala standard classes</div>
+                <pre>
+                <code class="scala">
+                    val head :: tail = List("hello", "world","any")
+                    print(head+"-")
+                    tail match {
+                        case b :: c => print(b+":"+c)
+                    }
+                </code>
+                </pre>
+                <h5>What is a result?</h5>
+                <div class="fragment">
+                    <pre>
+                         <code class="scala">
+                             //hello-world:List(any)
+                         </code>
+                    </pre>
+                    <h5>What signature it might have?</h5>
+                </div>
+                <pre class="fragment">
+                        <code class="scala">
+                            def unapply(s:A):Option[B]
+                        </code>
+                </pre>
+            </section>
+        </section>
+        <section>
+            <section>
+                <h2>
+                    <span>I. LANGUAGE:IF</span>
+                </h2>
+                <pre>
+                   <code class="scala">
+                       val desire =
+                       if(person.gender="male") "beer" else "strawberry"
+                   </code>
+                </pre>
+                <div class="fragment">
+                    <span> Returns a value </span>
+                </div>
+            </section>
+            <section>
+                <h2>
+                    <span>I. LANGUAGE:FOR</span>
+                </h2>
+                <div>
+                    <h4>If class has <span style="color:rgb(227, 206, 171)">map</span> and <span style="color:rgb(227, 206, 171)">flatmap</span> then we can use for comprehension to work with it</h4>
+                </div>
+                <pre class="fragment">
+                   <code class="scala">
+                       for(i&lt;- 1 to 20) print(i)
+                       // (1 to 20) : Range.Inclusive
+                   </code>
+                </pre>
+                <pre class="fragment">
+                   <code class="scala">
+                       for(value&lt;- valueOption)
+                        print("will be printed out if i was set"+i)
+                       // valueOption: Option[Int]
+                   </code>
+                </pre>
+                <pre class="fragment">
+                   <code class="scala">
+                       val lolypop =
+                        for (f1&lt;- future1, f2&lt;- future2) yield f1+f2
+                       //future1 and future2 :Future[Int]
+                   </code>
+                </pre>
+            </section>
+            <section>
+                <h2>
+                    <span>I. LANGUAGE:FOR</span>
+                </h2>
+                <h4>Is more complex than you think</h4>
+                <pre>
+                   <code class="scala">
+                   for {
+                       bound <- list
+                       out <- f(bound)
+                   } yield out
+                   //is the same as
+                   list flatMap f
+                   for (bound <- list) yield f(bound)
+                   //is the same as
+                   list map f
+                   </code>
+                </pre>
+                <pre class="fragment">
+                    <code class="scala">
+                    //big sequence will be transformed to
+                    //a chain of map and flatmap like that
+                    for(){
+                        a <- list1
+                        b <- list2
+                        btw <- a(b)
+                    } yield btw
+                        list1.map(a=>)
+                    </code>
+                </pre>
+            </section>
+        </section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.min.js"></script>
+
+<script>
+
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Parallax scrolling
+        // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+        // parallaxBackgroundSize: '2100px 900px',
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+            { src: 'lib/js/classList.js', condition: function () {
+                return !document.body.classList;
+            } },
+            { src: 'plugin/markdown/marked.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            } },
+            { src: 'plugin/markdown/markdown.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            } },
+            { src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                hljs.initHighlightingOnLoad();
+            } },
+            { src: 'plugin/zoom-js/zoom.js', async: true, condition: function () {
+                return !!document.body.classList;
+            } },
+            { src: 'plugin/notes/notes.js', async: true, condition: function () {
+                return !!document.body.classList;
+            } }
+        ]
+    });
+
+</script>
+</body>
+</html>
+
+
+
