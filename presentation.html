@@ -31,160 +31,182 @@
 </head>
 <body>
 <div class="reveal">
-    <div class="slides">
-        <section>
-            <h1>Scala Real World</h1>
+<div class="slides">
+<section>
+    <h1>Scala Real World</h1>
 
-            <div style="margin-top:200px">
-                <img src="https://cdn1.iconfinder.com/data/icons/cat-power/128/cat_purr.png">
-            </div>
-            <div class="absolute-element"
-                 style="position: absolute; width: 314px; height: 46px; z-index: 4; left: 321px; top: 567px;">
-                <span>by Roksana Seletska, Levi9</span>
-                <br>
-            </div>
+    <div style="margin-top:200px">
+        <img src="https://cdn1.iconfinder.com/data/icons/cat-power/128/cat_purr.png">
+    </div>
+    <div class="absolute-element"
+         style="position: absolute; width: 314px; height: 46px; z-index: 4; left: 321px; top: 567px;">
+        <span>by Roksana Seletska, Levi9</span>
+        <br>
+    </div>
 
-        </section>
-        <section>
-            <h2>Plan</h2>
+</section>
+<section>
+    <h2>Plan</h2>
 
-            <div style="display:block; margin-left:80px">
-                <div style="text-align: left;">I. Introduction to language</div>
-                <div style="text-align: left;">II. Types magic</div>
-                <div style="text-align: left;">III. Asynchronous design</div>
-                <div style="text-align: left;">IV. Asynchronous web</div>
-            </div>
-        </section>
-        <section>
-            <section>
-                <h2>I. LANGUAGE:Values</h2>
-                <h4>Powerful type inference</h4>
+    <div style="display:block; margin-left:80px">
+        <div style="text-align: left;">I. Introduction to language</div>
+        <div style="text-align: left;">II. Types magic</div>
+        <div style="text-align: left;">III. Asynchronous design</div>
+        <div style="text-align: left;">IV. Asynchronous web</div>
+    </div>
+</section>
+<section>
+    <section>
+        <h2>I. LANGUAGE:Values</h2>
+        <h4>EVERYTHING has a type. But scala has type inference</h4>
                <pre>
             <code class="scala">
-            val a = "string"
-            //val a:String
-            val b = List(("to" , ("Where", "go?")))
-            // b: List[(String, (String, String))] <-- sugared
-            // b: List[Tuple2[String, Tuple2[String, String]]]
-            Option("hey")//Some(hey)
-            Option(null)//None
+                val a = "string"
+                //val a:String
+                val b = List(("to" , ("Where", "go?")))
+                // b: List[(String, (String, String))] <-- sugared
+                // b: List[Tuple2[String, Tuple2[String, String]]]
             </code>
                </pre>
-                <h4>Operators reload</h4>
-               <pre>
-                        <code class="scala">
-                            val a = 3
-                            val b = 4
-                            a.+(b) == a + b //true
-                        </code>
-                </pre>
-            </section>
-            <section>
-                <h2>I. LANGUAGE:Import</h2>
+        <h4>No-dot notation is acceptable</h4>
+           <pre>
+                <code class="scala">
+                    val a = 3
+                    val b = 4
+                    a.+(b) == a + b //true
+                </code>
+           </pre>
+    </section>
+    <section>
+        <h2>I. LANGUAGE:Operators</h2>
+        <h4>Using special characters for dunction names, override arithmetical operation is acceptable</h4>
+        <pre>
+            <code class="scala">
+                case class Path(path:String) {
+                    def /(d:String):String = {
+                        path+"/"+d
+                    }
+                }
+                println(Path("/home") / "user1")
+            </code>
+        </pre>
+
+    </section>
+
+    <section>
+        <h2>I. LANGUAGE:Import</h2>
                     <pre>
                         <code class="scala">
                             import b.B
                             class HelloWorld{
-                                import a.A
-                                def sum = A+B
+                            import a.A
+                            def sum = A+B
                             }
                         </code>
                 </pre>
-            </section>
-            <section>
-                <h2>I. LANGUAGE:everything has a type</h2>
+    </section>
+    <section>
+        <h2>I. LANGUAGE:everything has a type</h2>
                     <pre>
                         <code class="scala">
                             val cake = if(x>1) 25
                         </code>
                 </pre>
-                <h3>What type does cake have?</h3>
-                <div class="fragment">
-                    Any
-                </div>
-            </section>
-            <section>
-                <h2>I. LANGUAGE:prefer immutable</h2>
-                <h3>Is list changed?</h3>
-                <div class="fragment">
-                    No, to make it changeable you need to use class <span style="color: rgb(227, 206, 171)">mutable.List</span>
-                </div>
+        <h3>What type does cake have?</h3>
+
+        <div class="fragment">
+            Any
+        </div>
+    </section>
+    <section>
+        <h2>I. LANGUAGE:prefer immutable</h2>
+
+        <h3>Is list changed?</h3>
+
+        <div class="fragment">
+            No, to make it changeable you need to use class <span style="color: rgb(227, 206, 171)">mutable.List</span>
+        </div>
                     <pre>
                         <code class="scala">
                             val list = List("mimi")
                             "lily" :: list
                         </code>
                 </pre>
-                <h3>Using immutable List is still effective, as soon as you use effective operations</h3>
-                <h3 class="fragment">Element are reused</h3>
-                
-            </section>
-            <section>
-                <h2>I. LANGUAGE:apply</h2>
-                <h4 class="fragment">Companion objects are object and class with same name</h4>
-                <h4 class="fragment">Companion can access private methods of other companion</h4>
-                <h4 class="fragment">Should be declared in a same file</h4>
+        <h3>Using immutable List is still effective, as soon as you use effective operations</h3>
+
+        <h3 class="fragment">Element are reused</h3>
+
+    </section>
+    <section>
+        <h2>I. LANGUAGE:apply</h2>
+        <h4 class="fragment">Companion objects are object and class with same name</h4>
+        <h4 class="fragment">Companion can access private methods of other companion</h4>
+        <h4 class="fragment">Should be declared in a same file</h4>
                 <pre class="fragment">
                     <code class="scala">
-  class Lol (reason:String) {
-    def getReason = reason
-  }
-  object Lol{
-    def apply(s:String):Lol ={
-      new Lol(s)
-    }
-  }
+                        class Lol (reason:String) {
+                        def getReason = reason
+                        }
+                        object Lol{
+                        def apply(s:String):Lol ={
+                        new Lol(s)
+                        }
+                        }
 
-  val myLol = Lol("irony")
-  println(myLol.getReason)// irony
-	 "Hello World"(0)// H
+                        val myLol = Lol("irony")
+                        println(myLol.getReason)// irony
+                        "Hello World"(0)// H
                     </code>
                 </pre>
-            </section>
-            <section>
-                <h2>I. LANGUAGE:pattern matching</h2>
-                <div>Thats why we can do pattern match to many scala standard classes</div>
+    </section>
+    <section>
+        <h2>I. LANGUAGE:pattern matching</h2>
+
+        <div>With some magic of extracting...</div>
                 <pre>
                 <code class="scala">
-	    val head :: tail = List("hello", "world","any")
-	    print(head+"-")
-	    tail match {
-	        case b :: c => print(b+":"+c)
-	    }
+                    val head :: tail = List("hello", "world","any")
+                    print(head+"-")
+                    tail match {
+                    case b :: c => print(b+":"+c)
+                    }
                 </code>
                 </pre>
-                <h5>What is a result?</h5>
-                <div class="fragment">
+        <h5>What is a result?</h5>
+
+        <div class="fragment">
                     <pre>
                          <code class="scala">
-		//  hello-world:List(any)
+                             // hello-world:List(any)
                          </code>
                     </pre>
-                </div>
-            </section>
-        </section>
-        <section>
-            <section>
-                <h2>
-                    <span>I. LANGUAGE:IF</span>
-                </h2>
+        </div>
+    </section>
+</section>
+<section>
+    <section>
+        <h2>
+            <span>I. LANGUAGE:IF</span>
+        </h2>
                 <pre>
                    <code class="scala">
-    val desire = if(person.gender="male") "beer" else "strawberry"
+val desire = if(person.gender="male") "beer" else "strawberry"
                    </code>
                 </pre>
-                <h4>What is functional about it?</h4>
-                <div class="fragment">
-                    <h4>It returns a value</h4>
-                </div>
-            </section>
-            <section>
-                <h2>
-                    <span>I. LANGUAGE:FOR</span>
-                </h2>
-                <div>
-                    <h4>Many standard classes can work nicely with for</h4>
-                </div>
+        <h4>What is functional about it?</h4>
+
+        <div class="fragment">
+            <h4>It returns a value, so it has type, so it is a function</h4>
+        </div>
+    </section>
+    <section>
+        <h2>
+            <span>I. LANGUAGE:FOR</span>
+        </h2>
+
+        <div>
+            <h4>Many standard classes can work nicely with for</h4>
+        </div>
                 <pre class="fragment">
                    <code class="scala">
                        for(i&lt;- 1 to 20) print(i)
@@ -194,204 +216,416 @@
                 <pre class="fragment">
                    <code class="scala">
                        for(value&lt;- valueOption)
-                        print("will be printed out if i was set"+i)
+                       print("will be printed out if i was set"+i)
                        // valueOption: Option[Int]
                    </code>
                 </pre>
                 <pre class="fragment">
                    <code class="scala">
                        val lolypop =
-                        for (f1&lt;- future1, f2&lt;- future2) yield f1+f2
+                       for (f1&lt;- future1, f2&lt;- future2) yield f1+f2
                        //future1 and future2 :Future[Int]
                    </code>
                 </pre>
-            </section>
-            <section>
-                <h2>
-                    <span>I. LANGUAGE: FOR</span>
-                </h2>
-                <h4 style="font-size:32px;">for is more complex than you think. It's a syntactic sugar over function composition</h4>
+    </section>
+    <section>
+        <h2>
+            <span>I. LANGUAGE: FOR</span>
+        </h2>
+        <h4 style="font-size:32px;">for is more complex than you think. It's a syntactic sugar over function
+            composition</h4>
                 <pre>
                    <code class="scala">
-	   for (bound <- list) yield f(bound)
-	   //   is
-	   list map f
+                       for (bound <- list) yield f(bound)
+                       // is
+                       list map f
                    </code>
                 </pre>
                 <pre>
                     <code class="scala">
-        //lets try to rewrite it back
-        val btw = for{
-            a <- list1; b <- list2
-        } yield a+b
+                        //lets try to rewrite it back
+                        val btw = for{
+                            a <- list1; b <- list2
+                        } yield a+b
                     </code>
                 </pre>
+        <h4>How can we translate this?</h4>
                 <pre class="fragment">
-                <code class="scala">
-        //  nice, isn't it?
-        btw = list1.map(a => list2.map(b=>a+b))
-                </code>
+                    <code class="scala">
+                        // nice, isn't it?
+                        btw = list1.map(a => list2.map(b=>a+b))
+                    </code>
                 </pre>
-            </section>
-            <section>
-                <h2>
-                    <span>I. LANGUAGE: FOR</span>
-                </h2>
-                <h4>
-    for is an universal computation control tool. Asynchronous computation like that
-                </h4>
+    </section>
+    <section>
+        <h2>
+            <span>I. LANGUAGE: FOR</span>
+        </h2>
+        <h4>
+            for is an universal computation evaluator. 'callback nightmare' of asynchronous computations like that
+        </h4>
+                <pre>
+                    <code>
+                        def currentUser: Future[User] = ???
+                        def getBasket(user: User): Future[Basket] = ???
+                        def addSteamBox(basket: Basket): Future[Int] = ???
+                        def sendResponse(msg:String) {}
+                    </code>
+                </pre>
                 <pre>
                 	<code class="scala">
-	def currentUser: Future[User] = ???
-	def getBasket(user: User): Future[Basket] = ???
-	def addSteamBox(basket: Basket): Future[Int] = ???
-	def sendResponse(msg:String) {}
-	val userFuture = currentUser
-	userFuture.onSuccess{
-    case user => {
-      val basketFuture = getBasket(user)
-      basketFuture.onSuccess{
-        case basket => {
-          val itemsCountFuture = addSteamBox(basket)
-          itemsCountFuture.onSuccess{
-            case itemsCount => {
-              sendResponse("Items: "+itemsCount)
+    val userFuture = currentUser
+    userFuture.onSuccess{
+        case user => {
+            val basketFuture = getBasket(user)
+            basketFuture.onSuccess{
+                case basket => {
+                    val itemsCountFuture = addSteamBox(basket)
+                    itemsCountFuture.onSuccess{
+                        case itemsCount => {
+                            sendResponse("Items: "+itemsCount)
+                        }
+                    }
+                    itemsCountFuture.onFailure{
+                        case e => sendResponse(e.toString)
+                    }
+                }
             }
-          }
-          itemsCountFuture.onFailure{
-            case e => sendResponse(e.toString)
-          }
+            basketFuture.onFailure{
+                case e => sendResponse(e.toString)
+            }
         }
-      }
-      basketFuture.onFailure{
+    }
+    userFuture.onFailure{
         case e => sendResponse(e.toString)
-      }
     }
-  }
-  userFuture.onFailure{
-    case e => sendResponse(e.toString)
-  }
-                	</code>
+                    </code>
                 </pre>
-			
-         </section>
-         <section>
-         	    <h2>
-                    <span>I. LANGUAGE: FOR</span>
-                </h2>
-                <h4>
-  Can be refactored
-                </h4>
-                <pre>
-                	<code class="scala">
-  val result = for {
-    user <- currentUser
-    basket <- getBasket(user)
-    itemsCount <- addSteamBox(basket)
-  } yield {
-    sendResponse("Items: "+itemsCount)
-  }
 
-  for (e <- result.failed){
-    sendResponse(e.toString)
-  }
-                	</code>
-                </pre>
-         </section>
-        </section>
-        <section>
-        	<h2>I.LANGUAGE:Implicit class</h2>
+    </section>
+    <section>
+        <h2>
+            <span>I. LANGUAGE: FOR</span>
+        </h2>
+        <h4>
+            Because of for magic we can do
+        </h4>
+        <pre>
+            <code class="scala">
+                val result = for {
+                    user <- currentUser
+                    basket <- getBasket(user)
+                    itemsCount <- addSteamBox(basket)
+                } yield {
+                    sendResponse("Items: "+itemsCount)
+                }
+
+                for (e <- result.failed){
+                    sendResponse(e.toString)
+                }
+            </code>
+        </pre>
+        <h4>Spolier alert:</h4><h4 class="fragment">for has a type, it is a function</h4>
+    </section>
+</section>
+<section>
+<section>
+    <h2>I.LANGUAGE:Implicit class</h2>
         	<pre>
         		<code class="scala">
- implicit class JsonConverter(x: User) {
-    def toJson(): String = {
-      "{name:"+x.name+";age:"+x.age+"}"
-    }
-  }
+            implicit class JsonConverter(x: User) {
+                def toJson(): String = {
+                    "{name:"+x.name+";age:"+x.age+"}"
+                }
+            }
 
-// ... 
+            // ...
 
- val u = User("Misao Okawa", 115)
- u.toJson() // {name:Misao Okawa;age:115}
- </code>
+            val u = User("Misao Okawa", 115)
+            u.toJson() // {name:Misao Okawa;age:115}
+                </code>
         	</pre>
-        </section>
-        <section>
-        	<h2>I.LANGUAGE:Implicit parameters</h2>
+</section>
+<section>
+    <h2>I.LANGUAGE:Implicit parameters</h2>
+        <pre>
+            <code class="scala">
+                case class Environment(mood:String, place:String)
+                case class User(name:String, age:Int){
+                    def tellAboutEnvironment(implicit env:Environment)={
+                        println(env)
+                    }
+                }
+                // ...
+                implicit val env = Environment("sad", "grey woods")
+                // ...
+                User("Nancy",10).tellAboutEnvironment
+                // Environment(sad, grey woods)
+            </code>
+        </pre>
+</section>
+</section>
+
+<section>
+    <section>
+        <h2>I.LANGUAGE:higher order functions</h2>
+        <h4>A function over other function.</h4>
+        <h4>It might either take function as a parameter or return a function</h4>
         	<pre>
         		<code class="scala">
-case class Environment(mood:String, place:String)
-case class User(name:String, age:Int){
-  def tellAboutEnvironment(implicit env:Environment)={
-    println(env)
-  }
-}
-// ...
-implicit val env = Environment("sad", "grey woods")
-// ...
-    User("Nancy",10).tellAboutEnvironment
-        		</code>
+                    def applyFunction(predicate:Int=>Boolean) = {
+                        def sum(v1:Int, v2:Int) = {
+                            ( if(predicate(v1)) v1 else 0 + v2).toString
+                        }
+                        sum _
+                    }
+                    def predicate(value:Int):Boolean = value > 10
+                    println(applyFunction(predicate)(25, 40))
+                    println(applyFunction(predicate)(5, 40))
+                </code>
         	</pre>
-        </section>
-        <section>
-        <section>
-        	<h2>I.LANGUAGE:higher order functions</h2>
-        	<h4>A function over other function.</h4>
-        	<h4>It might either take function as a parameter or return a function</h4>
+        <h4>applyFunction is higher order function. What is going to appear on screen?</h4>
+        <h4 class="fragment">
+            65 <br>
+            40
+        </h4>
+    </section>
+    <section>
+        <h2>I.LANGUAGE:Partial function</h2>
+        <h4>In mathematical sense</h4>
         	<pre>
         		<code class="scala">
-        		def func1(f:String=>Unit) f()
-        		</code>
+                    val div: PartialFunction[(Double, Double), Double] = {
+                        case (x, y) if y != 0 => x /y
+                    }
+                    div.isDefinedAt(1, 0)
+                </code>
         	</pre>
-        	<h4>func1 is higher order function</h4>
-        	</section>
-        	<section>
-<h2>I.LANGUAGE:higher order functions</h2>
-<h4>With "pimp my library" pattern collections are provided with a great amount of HOF</h4>
-<img src="css/lol.jpg" style="float:left" />
-<div style="height:200px" style="float:left">
-	map
-	<span style="color:black">filter</span>
-	collect
-	<span style="color:black">foldLeft/Right</span>
-	take
-	<span style="color:black">drop</span>
-	find
-	<span style="color:black">takeWhile</span>
-	dropWhile
-	<span style="color:black">slice</span>
-	sliding(stepSkip, stepTake)
-	<span style="color:black">flatten</span>
-	partition
-	<span style="color:black">head/headOpt</span>
-	tail
-	<span style="color:black">count</span>
-	max/min
-	<span style="color:black">maxBy/minBy</span>
-	sort/sortBy
-	<span style="color:black">collectFirst</span>
-	etc...
-</div>
-        	</section>
-        </section>
-        <section>
-        <section>
-	        <h2>I.LANGUAGE. Patterns</h2>	
-	        <h4>java patterns made in scala</h4>
+        <h4 class="fragment">
+            false
+        </h4>
+    </section>
+    <section>
+        <h2>I.LANGUAGE:Lazy</h2>
+        <h4>Of course Scala has this feature</h4>
+        	<pre>
+        		<code class="scala">
+                    lazy val x = {
+                        print("(computing x) ")
+                        "hey"
+                    }
 
-	        <a href="http://pavelfatin.com/design-patterns-in-scala">Explore the magic</a>
-	        </section>
-        </section>
-        <section>
-        	<h2>That is basic Scala</h2>
-        	<h2>Questions?</h2>
-        </section>
+                    print("x = ")
+                    println(x)
+                </code>
+        	</pre>
+        <h4>What is going to be printed?</h4>
+        <div class="fragment">
+           <h4> x = (computing x) "hey"</h4>
+
+            <h4>Real example:</h4>
+          <pre>
+            <code class="class">
+                case class Employee(id: Int, name: String, managerId: Int) {
+                    lazy val manager: Employee = Db.get(managerId)
+                    lazy valteam: List[Employee] = Db.team(id)
+                }
+            </code>
+        </pre>
+        </div>
+    </section>
+    <section>
+        <h2>I.LANGUAGE:higher order functions</h2>
+        <h4>"pimp my library" pattern  is the way collections have huge amount of HOF</h4>
+        <img src="css/lol.jpg" style="float:left"/>
+
+        <div style="height:200px" style="float:left">
+            map
+            <span style="color:black">filter</span>
+            collect
+            <span style="color:black">foldLeft/Right</span>
+            take
+            <span style="color:black">drop</span>
+            find
+            <span style="color:black">takeWhile</span>
+            dropWhile
+            <span style="color:black">slice</span>
+            sliding(stepSkip, stepTake)
+            <span style="color:black">flatten</span>
+            partition
+            <span style="color:black">head/headOpt</span>
+            tail
+            <span style="color:black">count</span>
+            max/min
+            <span style="color:black">maxBy/minBy</span>
+            sort/sortBy
+            <span style="color:black">collectFirst</span>
+            etc...
+        </div>
+    </section>
+</section>
+<section>
+    <section>
+        <h2>I.LANGUAGE. Patterns</h2>
+        <h4>All java patterns can be easily implemented in scala</h4>
+        <h4>Some of them are language constructions</h4>
+        <a href="http://pavelfatin.com/design-patterns-in-scala">Explore the magic in details</a>
+    </section>
+</section>
+<section>
+    <h2>That is basic Scala</h2>
+    <h2>Questions?</h2>
+</section>
 <!-- // part2 -->
-		<section>
-			<h2>II.Types And Magic</h2>
+<section>
+    <h2>II.Types And Magic</h2>
+    <h4>Here where all begins</h4>
+    <ol>
+        <li>case classes</li>
+        <li>extractors</li>
+        <li>mixins</li>
+        <li>type classes</li>
+        <li>monads</li>
+    </ol>
+</section>
+<section>
+    <h2>II.Types And Magic</h2>
+    <h4>Here where all begins</h4>
+    <ol>
+        <li>case classes</li>
+        <li>extractors</li>
+        <li>traits</li>
+        <li>type classes</li>
+        <li>par, view, force, seq</li>
+        <li>monads</li>
+    </ol>
+</section>
+<section>
+    <section>
+    <h2>II.Types And Magic.Case classes</h2>
+    <h4>Case classes are domain objects</h4>
+    <pre>
+        <code class="scala">
+            case class Person(name:String, surname:String="Li")
+            Person("Yui") // Person(Yui,Li)
+            Person("John", "Doe") // Person(John,Doe)
+        </code>
+    </pre>
+    <h4>This methods are implemented out of the box for case classes</h4>
+   <pre>
+        <code class="scala">
+            val  p= Person("Bruce")
+            println(p.name)//Bruce
+            println(p.toString)//Person(Bruce,Lee)
+            println(p.hashCode())//980329485
+            val p2 = p.copy()
+            println(p == p2)//true
+            println(p.eq(p2))//false
+            println(p.productArity)//2
+        </code>
+    </pre>
+    <h4>And also...</h4>
+    </section>
+    <section>
+        <h2>II.Types And Magic.Case classes instantiation and pattern matching</h2>
+        <h4>Why we can do things like that?</h4>
+        <h4 class="fragment">
+            apply for instantiation, unapply for extraction
+        </h4>
+        <pre class="fragment" style="width:1000px">
+            <code class="scala" >
+object Person {
+    def apply(name: String, surname: String) : Person = new Person(name, surname)
+    def unapply(p: Person) : Option[Pair[String, String]] = Some((p.name, p.surname))
+}
 
-		</section>
-    </div>
+//..
+
+Person("Me") match {
+    case Person("Me", a) => println(a) // Lee
+}
+            </code>
+        </pre>
+    </section>
+    <section>
+        <h2>II.Types And Magic.Traits</h2>
+
+        <h4>I say - multiple inheritance. You scream NO!!!</h4>
+
+        <div class="fragment">
+        <h4>Lets understand why. It is all because of diamond-problem.</h4>
+            <img src="img/diamond-problem.jpg"/>
+        </div>
+
+        <div class="fragment">
+            <h4>Traits solve it.</h4>
+        </div>
+    </section>
+    <section>
+        <h2>II.Types And Magic.Traits</h2>
+        <h4>Trait usage</h4>
+        <div class="fragment">
+            <pre>
+                <code class="scala">
+        trait Bird {
+            def makeSound:String = {
+                "default"
+            }
+        }
+        trait SwimmingBird{
+            def swim :String
+        }
+        case class Penguin() extends Bird with SwimmingBird{
+            def swim = {"tap-tap"}
+        }
+        trait FlyingBird {
+            self: Bird =>
+            def fly :String
+        }
+        //won't compile
+        //case class Jaguar() extends FlyingBird
+
+        println(Penguin().makeSound) //default
+        println(Penguin().swim) // tap-tap
+                </code>
+            </pre>
+        </div>
+    </section>
+    <section>
+        <h2>II.Types And Magic.Traits</h2>
+        <h4>The answer is linearization.. What we can get out of it?</h4>
+        <div class="fragment">
+            <pre style="max-height: 300px;">
+                <code class="scala" style="font-size: 17px;">
+    trait GoodFlyer extends FlyingBird {
+        self : Bird =>
+        def fly={"I fly good"}
+    }
+
+    trait BadFlyer extends FlyingBird {
+        self : Bird =>
+        def fly={"I fly bad"}
+    }
+
+    case class MoodFlyer(mood:Boolean) extends Bird with GoodFlyer with BadFlyer {
+        override def fly = {
+            if(mood){
+                super[GoodFlyer].fly
+            } else {
+                super [BadFlyer].fly
+            }
+        }
+    }
+    //...
+    println(MoodFlyer(true).fly)//I fly good
+    println(MoodFlyer(false).fly)//I fly bad
+                </code>
+            </pre>
+        </div>
+    </section>
+
+</section>
+</div>
 </div>
 
 <script src="lib/js/head.min.js"></script>
