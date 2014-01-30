@@ -145,16 +145,17 @@
                 <pre class="fragment">
                     <code class="scala">
                         class Lol (reason:String) {
-                        def getReason = reason
+                            def getReason = reason
                         }
                         object Lol{
-                        def apply(s:String):Lol ={
-                        new Lol(s)
-                        }
+                            def apply(s:String):Lol ={
+                                new Lol(s)
+                            }
                         }
 
                         val myLol = Lol("irony")
                         println(myLol.getReason)// irony
+                        //?
                         "Hello World"(0)// H
                     </code>
                 </pre>
@@ -460,6 +461,10 @@ val desire = if(person.gender="male") "beer" else "strawberry"
             <span style="color:black">maxBy/minBy</span>
             sort/sortBy
             <span style="color:black">collectFirst</span>
+            par
+            <span style="color:black">view</span>
+            force
+            <span style="color:black">seq</span>
             etc...
         </div>
     </section>
@@ -495,8 +500,6 @@ val desire = if(person.gender="male") "beer" else "strawberry"
         <li>case classes</li>
         <li>extractors</li>
         <li>traits</li>
-        <li>type classes</li>
-        <li>par, view, force, seq</li>
         <li>monads</li>
     </ol>
 </section>
@@ -623,7 +626,10 @@ Person("Me") match {
             </pre>
         </div>
     </section>
-
+</section>
+<section>
+    <h2>II.Types And Magic.Monads</h2>
+    <h4>There is no cake(</h4>
 </section>
 </div>
 </div>
