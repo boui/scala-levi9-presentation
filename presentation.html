@@ -50,7 +50,7 @@
 
     <div style="display:block; margin-left:80px">
         <div style="text-align: left;">I. Introduction to language</div>
-        <div style="text-align: left;">II. Types magic</div>
+        <div style="text-align: left;">II. Types</div>
         <div style="text-align: left;">III. Asynchronous design</div>
         <div style="text-align: left;">IV. Asynchronous web</div>
     </div>
@@ -79,7 +79,7 @@
     </section>
     <section>
         <h2>I. LANGUAGE:Operators</h2>
-        <h4>Using special characters for dunction names, override arithmetical operation is acceptable</h4>
+        <h4>Using special characters for function names, override arithmetical operation is acceptable</h4>
         <pre>
             <code class="scala">
                 case class Path(path:String) {
@@ -97,11 +97,11 @@
         <h2>I. LANGUAGE:Import</h2>
                     <pre>
                         <code class="scala">
-                            import b.B
-                            class HelloWorld{
-                            import a.A
-                            def sum = A+B
-                            }
+                import b.B
+                class HelloWorld{
+                    import a.A
+                    def sum = A+B
+                }
                         </code>
                 </pre>
     </section>
@@ -134,32 +134,46 @@
                 </pre>
         <h3>Using immutable List is still effective, as soon as you use effective operations</h3>
 
-        <h3 class="fragment">Element are reused</h3>
+        <h3 class="fragment">Elements are reused</h3>
 
     </section>
     <section>
-        <h2>I. LANGUAGE:apply</h2>
+        <h2>I. LANGUAGE: companion objects <br> and apply</h2>
         <h4 class="fragment">Companion objects are object and class with same name</h4>
         <h4 class="fragment">Companion can access private methods of other companion</h4>
         <h4 class="fragment">Should be declared in a same file</h4>
                 <pre class="fragment">
                     <code class="scala">
-                        class Lol (reason:String) {
-                            def getReason = reason
-                        }
-                        object Lol{
-                            def apply(s:String):Lol ={
-                                new Lol(s)
-                            }
-                        }
-
-                        val myLol = Lol("irony")
-                        println(myLol.getReason)// irony
-                        //?
-                        "Hello World"(0)// H
+            class Lol (reason:String) {
+                private def getReason = reason
+            }
+            object Lol{
+                def apply(s:String):Lol = {
+                    new Lol(s)
+                }
+                def analyzeState(lol:Lol) {
+                    if(lol.getReason == "irony"){
+                        println("cool")
+                    } else {
+                        println("not cool")
+                    }
+                }
+            }
                     </code>
                 </pre>
     </section>
+    <section>
+        <h2>I. LANGUAGE: companion objects <br> and apply</h2>
+        <h2>...</h2>
+        <pre class="fragment">
+                    <code class="scala">
+        val myLol = Lol("irony")
+        println(myLol)
+        Lol.analyzeState(myLol)//cool
+        Lol.analyzeState(Lol("happiness"))//not cool
+        </code>
+        </pre>
+        </section>
     <section>
         <h2>I. LANGUAGE:pattern matching</h2>
 
@@ -263,7 +277,7 @@ val desire = if(person.gender="male") "beer" else "strawberry"
             <span>I. LANGUAGE: FOR</span>
         </h2>
         <h4>
-            for is an universal computation evaluator. 'callback nightmare' of asynchronous computations like that
+            for is an universal computation evaluator. lets refactor 'callback nightmare' of asynchronous computations
         </h4>
                 <pre>
                     <code>
@@ -483,18 +497,7 @@ val desire = if(person.gender="male") "beer" else "strawberry"
 </section>
 <!-- // part2 -->
 <section>
-    <h2>II.Types And Magic</h2>
-    <h4>Here where all begins</h4>
-    <ol>
-        <li>case classes</li>
-        <li>extractors</li>
-        <li>mixins</li>
-        <li>type classes</li>
-        <li>monads</li>
-    </ol>
-</section>
-<section>
-    <h2>II.Types And Magic</h2>
+    <h2>II.Types</h2>
     <h4>Here where all begins</h4>
     <ol>
         <li>case classes</li>
@@ -505,7 +508,7 @@ val desire = if(person.gender="male") "beer" else "strawberry"
 </section>
 <section>
     <section>
-    <h2>II.Types And Magic.Case classes</h2>
+    <h2>II.Types.Case classes</h2>
     <h4>Case classes are domain objects</h4>
     <pre>
         <code class="scala">
@@ -551,7 +554,7 @@ Person("Me") match {
         </pre>
     </section>
     <section>
-        <h2>II.Types And Magic.Traits</h2>
+        <h2>II.Types.Traits</h2>
 
         <h4>I say - multiple inheritance. You scream NO!!!</h4>
 
@@ -595,7 +598,7 @@ Person("Me") match {
         </div>
     </section>
     <section>
-        <h2>II.Types And Magic.Traits</h2>
+        <h2>II.Types.Traits</h2>
         <h4>The answer is linearization.. What we can get out of it?</h4>
         <div class="fragment">
             <pre style="max-height: 300px;">
@@ -628,8 +631,23 @@ Person("Me") match {
     </section>
 </section>
 <section>
-    <h2>II.Types And Magic.Monads</h2>
-    <h4>There is no cake(</h4>
+    <h2>II.Types.Monads</h2>
+    <h4>We will cover it tomorrow next time, sorry</h4>
+</section>
+<section>
+    <h2>This is all you need to know to write comfortably in Scala.</h2>
+    <h4>Next time we will cover</h4>
+    <ul>
+        <li>
+            Concurrency
+        </li>
+        <li>
+            Asynchronous design
+        </li>
+        <li>
+            How to be async in web
+        </li>
+    </ul>
 </section>
 </div>
 </div>
