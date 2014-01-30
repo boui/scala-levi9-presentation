@@ -52,7 +52,7 @@
         <div style="text-align: left;">I. Introduction to language</div>
         <div style="text-align: left;">II. Types</div>
         <div style="text-align: left;">III. Asynchronous design</div>
-        <div style="text-align: left;">IV. Asynchronous web</div>
+        <div style="text-align: left;">IV. Demo</div>
     </div>
 </section>
 <section>
@@ -500,6 +500,7 @@ val desire = if(person.gender="male") "beer" else "strawberry"
     <h2>II.Types</h2>
     <h4>Here where all begins</h4>
     <ol>
+        <li>your first class</li>
         <li>case classes</li>
         <li>extractors</li>
         <li>traits</li>
@@ -507,12 +508,46 @@ val desire = if(person.gender="male") "beer" else "strawberry"
     </ol>
 </section>
 <section>
+      <h2>II.Types.Creating type</h2>
+    <h4>primary constructor</h4>
+    <h4>In scala you have a single enter point to a class</h4>
+    <pre>
+        <code class="scala">
+object Book{
+    def fromString(s:String):Book = {
+        val values = s.split(',')
+        require(values.length>1)
+        new Book(values(0), UUID.fromString(values(1)))
+    }
+}
+class Book(author: String, id: UUID) {
+    require(!author.isEmpty)
+    require(id !=null && id.toString.length>0)
+
+    def this(author: String) = {
+        this(author, UUID.randomUUID())
+    }
+    override def toString(): String = {
+        "Book(" + author + "," + id.toString.take(2) + ")"
+    }
+}
+println(new Book("Lermontov"))//  Book(Lermontov,3c)
+println(new Book("Lomonosov", UUID.randomUUID()))
+        //  Book(Lomonosov,c9)
+println(
+  Book.fromString("Greboedov,1fa6615f-ec61-4255-9307-d628c8e4e4c8"))
+        //  Book(Greboedov,1f)
+//  new Book("")
+        </code>
+    </pre>
+</section>
+<section>
     <section>
     <h2>II.Types.Case classes</h2>
     <h4>Case classes are domain objects</h4>
     <pre>
         <code class="scala">
-            case class Person(name:String, surname:String="Li")
+            case class Person(name:String, surname:String="Lee")
             Person("Yui") // Person(Yui,Li)
             Person("John", "Doe") // Person(John,Doe)
         </code>
@@ -520,34 +555,32 @@ val desire = if(person.gender="male") "beer" else "strawberry"
     <h4>This methods are implemented out of the box for case classes</h4>
    <pre>
         <code class="scala">
-            val  p= Person("Bruce")
-            println(p.name)//Bruce
-            println(p.toString)//Person(Bruce,Lee)
-            println(p.hashCode())//980329485
-            val p2 = p.copy()
-            println(p == p2)//true
-            println(p.eq(p2))//false
-            println(p.productArity)//2
+val  p= Person("Bruce")
+println(p.name)//Bruce
+println(p.toString)//Person(Bruce,Lee)
+println(p.hashCode())//980329485
+val p2 = p.copy() //deep copy
+println(p.copy(name="Brandon")) //Person(Brandon,Lee)
+println(p == p2)//true
+println(p.eq(p2))//false
+println(p.productArity)//2
+// + companion object with apply and unapply
         </code>
     </pre>
-    <h4>And also...</h4>
     </section>
     <section>
-        <h2>II.Types And Magic.Case classes instantiation and pattern matching</h2>
-        <h4>Why we can do things like that?</h4>
-        <h4 class="fragment">
-            apply for instantiation, unapply for extraction
+        <h2>II.Types.Extractors</h2>
+        <h4>
+            How does pattern matching works?
         </h4>
         <pre class="fragment" style="width:1000px">
             <code class="scala" >
 object Person {
-    def apply(name: String, surname: String) : Person = new Person(name, surname)
-    def unapply(p: Person) : Option[Pair[String, String]] = Some((p.name, p.surname))
+    def unapply(p: Person) : Option[Pair[String, String]]
+                = Some((p.name, p.surname))
 }
-
 //..
-
-Person("Me") match {
+Person("Nio") match {
     case Person("Me", a) => println(a) // Lee
 }
             </code>
@@ -555,11 +588,9 @@ Person("Me") match {
     </section>
     <section>
         <h2>II.Types.Traits</h2>
-
-        <h4>I say - multiple inheritance. You scream NO!!!</h4>
-
+        <h4>I say - multiple inheritance. You say - NO! Why?</h4>
         <div class="fragment">
-        <h4>Lets understand why. It is all because of diamond-problem.</h4>
+        <h4>It is all because of diamond-problem.</h4>
             <img src="img/diamond-problem.jpg"/>
         </div>
 
@@ -568,7 +599,7 @@ Person("Me") match {
         </div>
     </section>
     <section>
-        <h2>II.Types And Magic.Traits</h2>
+        <h2>II.Types.Traits</h2>
         <h4>Trait usage</h4>
         <div class="fragment">
             <pre>
@@ -579,18 +610,9 @@ Person("Me") match {
             }
         }
         trait SwimmingBird{
-            def swim :String
+            def swim :String = {"tap-tap"}
         }
-        case class Penguin() extends Bird with SwimmingBird{
-            def swim = {"tap-tap"}
-        }
-        trait FlyingBird {
-            self: Bird =>
-            def fly :String
-        }
-        //won't compile
-        //case class Jaguar() extends FlyingBird
-
+        case class Penguin() extends Bird with SwimmingBird
         println(Penguin().makeSound) //default
         println(Penguin().swim) // tap-tap
                 </code>
@@ -599,55 +621,157 @@ Person("Me") match {
     </section>
     <section>
         <h2>II.Types.Traits</h2>
-        <h4>The answer is linearization.. What we can get out of it?</h4>
+        <h4>Linearization.</h4>
         <div class="fragment">
             <pre style="max-height: 300px;">
                 <code class="scala" style="font-size: 17px;">
     trait GoodFlyer extends FlyingBird {
-        self : Bird =>
-        def fly={"I fly good"}
+        override def fly={"I fly good"}
     }
-
     trait BadFlyer extends FlyingBird {
-        self : Bird =>
-        def fly={"I fly bad"}
+        override def fly={"I fly bad"}
     }
-
-    case class MoodFlyer(mood:Boolean) extends Bird with GoodFlyer with BadFlyer {
+    case class Kiwi() extends Bird with GoodFlyer with BadFlyer
+    //...
+    println(Kiwi().makeSound)//default
+    println(Kiwi().fly)//I fly bad
+                </code>
+            </pre>
+        </div>
+    </section>
+    <section>
+        <h2>II.Types.Traits</h2>
+        <h4>More?</h4>
+        <div class="fragment">
+            <pre style="max-height: 300px;">
+                <code class="scala" style="font-size: 17px;">
+    trait GoodFlyer extends FlyingBird {
         override def fly = {
-            if(mood){
+            "I fly good"
+        }
+    }
+    trait BadFlyer extends FlyingBird {
+        override def fly = {
+            "I fly bad"
+        }
+    }
+    case class MoodFlyer(mood: Boolean) extends Bird with GoodFlyer with BadFlyer {
+        override def fly = {
+            if (mood) {
                 super[GoodFlyer].fly
             } else {
-                super [BadFlyer].fly
+                super[BadFlyer].fly
             }
         }
     }
-    //...
     println(MoodFlyer(true).fly)//I fly good
     println(MoodFlyer(false).fly)//I fly bad
                 </code>
             </pre>
         </div>
     </section>
+    <section>
+        <h2>II.Types.Traits</h2>
+        <h4>Mixin restrictions</h4>
+        <div class="fragment">
+            <pre>
+                <code class="scala">
+    trait FlyingBird {
+        self: Bird =>
+            def fly :String
+    }
+    //won't compile
+    //case class Jaguar() extends FlyingBird
+                </code>
+            </pre>
+        </div>
+    </section>
 </section>
+<section>
 <section>
     <h2>II.Types.Monads</h2>
-    <h4>We will cover it tomorrow next time, sorry</h4>
+    <h4>Monad is a group of classes, that serves a single purpose</h4>
+    <h3>Execute computations controlled by monad</h3>
+    <h4 class="fragment">Scared? </h4>
+    <h4 class="fragment">Let's write a simple monad</h4>
 </section>
 <section>
-    <h2>This is all you need to know to write comfortably in Scala.</h2>
-    <h4>Next time we will cover</h4>
+    <h2>II.Types.Validation Monad</h2>
+    <pre>
+        <code class="scala" style="font-size: 18px;">
+sealed trait Validation[+A] {
+    //also known in haskell as >>= or bind in theory
+    def flatMap[B](f: (A) => Validation[B]): Validation[B] = this match {
+        case Success(a:A) => f(a)
+        case fail@Failure(error:String) => fail
+    }
+    def map[B](f: A=>B): Validation[B] = this match {
+        case Success(a:A) => Success(f(a))
+        case fail@Failure(error:String) => fail
+    }
+    //works only if you use no yield in for
+    def foreach(f: A => Unit): Unit = this match {
+        case Success(a:A) => f(a)
+        case _ =>
+    }
+}
+case class Success[+A](value:A) extends Validation[A]
+case class Failure(error:String) extends Validation[Nothing]
+        </code>
+    </pre>
+</section>
+<section>
+    <h2>II.Types.Validation Monad</h2>
+    <h4>Lets add some sugar</h4>
+    <pre>
+        <code class="scala" style="font-size: 18px;">
+implicit class ValidationPimp[A](obj: Option[A]){
+    def ~(errorMessage:String):Validation[A] = obj match {
+        case Some(value) => Success(value)
+        case None => Failure(errorMessage)
+    }
+}
+        </code>
+    </pre>
+</section>
+<section>
+<h2>II.Types.Validation Monad</h2>
+<h4>Usage</h4>
+    <pre>
+        <code class="scala" style="font-size: 18px;">
+case class Cat(adressOnLeash:Option[String])
+    def foundCat(cat:Cat) {
+    val result = for{
+        adress <- cat.adressOnLeash ~ "take him home"
+    } yield adress
+    println(result)
+}
+
+foundCat(Cat(Some("Home, app.1"))) // Home, app.1
+foundCat(Cat(None)) // take him home
+        </code>
+    </pre>
+</section>
+</section>
+<section>
+    <h2>Most used standard monads</h2>
     <ul>
-        <li>
-            Concurrency
-        </li>
-        <li>
-            Asynchronous design
-        </li>
-        <li>
-            How to be async in web
-        </li>
+        <li>List :)</li>
+        <li>Option</li>
+        <li>Future</li>
     </ul>
+</section>
+<section>
+    <h2>Option</h2>
+</section>
+<section>
+    <h2>Future</h2>
+</section>
+<section>
+    <h2>Asynchronous design</h2>
+</section>
+<section>
+    <h2>Web</h2>
 </section>
 </div>
 </div>
