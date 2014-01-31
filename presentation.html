@@ -494,6 +494,7 @@ val desire = if(person.gender="male") "beer" else "strawberry"
 <section>
     <h2>That is basic Scala</h2>
     <h2>Questions?</h2>
+    <img src="img/question.jpg"/>
 </section>
 <!-- // part2 -->
 <section>
@@ -512,7 +513,7 @@ val desire = if(person.gender="male") "beer" else "strawberry"
     <h4>primary constructor</h4>
     <h4>In scala you have a single enter point to a class</h4>
     <pre>
-        <code class="scala">
+        <code class="scala" style="font-size:18px; line-height: 18px;">
 object Book{
     def fromString(s:String):Book = {
         val values = s.split(',')
@@ -531,12 +532,16 @@ class Book(author: String, id: UUID) {
         "Book(" + author + "," + id.toString.take(2) + ")"
     }
 }
+        </code>
+    </pre>
+    <pre>
+        <code class="scala" style="font-size:18px; line-height: 18px;">
 println(new Book("Lermontov"))//  Book(Lermontov,3c)
 println(new Book("Lomonosov", UUID.randomUUID()))
-        //  Book(Lomonosov,c9)
+//  Book(Lomonosov,c9)
 println(
-  Book.fromString("Greboedov,1fa6615f-ec61-4255-9307-d628c8e4e4c8"))
-        //  Book(Greboedov,1f)
+Book.fromString("Greboedov,1fa6615f-ec61-4255-9307-d628c8e4e4c8"))
+//  Book(Greboedov,1f)
 //  new Book("")
         </code>
     </pre>
@@ -547,24 +552,24 @@ println(
     <h4>Case classes are domain objects</h4>
     <pre>
         <code class="scala">
-            case class Person(name:String, surname:String="Lee")
-            Person("Yui") // Person(Yui,Li)
-            Person("John", "Doe") // Person(John,Doe)
+    case class Person(name:String, surname:String="Lee")
+    Person("Yui") // Person(Yui,Li)
+    Person("John", "Doe") // Person(John,Doe)
         </code>
     </pre>
     <h4>This methods are implemented out of the box for case classes</h4>
    <pre>
         <code class="scala">
-val  p= Person("Bruce")
-println(p.name)//Bruce
-println(p.toString)//Person(Bruce,Lee)
-println(p.hashCode())//980329485
-val p2 = p.copy() //deep copy
-println(p.copy(name="Brandon")) //Person(Brandon,Lee)
-println(p == p2)//true
-println(p.eq(p2))//false
-println(p.productArity)//2
-// + companion object with apply and unapply
+    val  p= Person("Bruce")
+    println(p.name)//Bruce
+    println(p.toString)//Person(Bruce,Lee)
+    println(p.hashCode())//980329485
+    val p2 = p.copy() //deep copy
+    println(p.copy(name="Brandon")) //Person(Brandon,Lee)
+    println(p == p2)//true
+    println(p.eq(p2))//false
+    println(p.productArity)//2
+    // + companion object with apply and unapply
         </code>
     </pre>
     </section>
@@ -586,6 +591,8 @@ Person("Nio") match {
             </code>
         </pre>
     </section>
+</section>
+<section>
     <section>
         <h2>II.Types.Traits</h2>
         <h4>I say - multiple inheritance. You say - NO! Why?</h4>
@@ -644,7 +651,7 @@ Person("Nio") match {
         <h4>More?</h4>
         <div class="fragment">
             <pre style="max-height: 300px;">
-                <code class="scala" style="font-size: 17px;">
+                <code class="scala" style="font-size: 17px; line-height: 17px">
     trait GoodFlyer extends FlyingBird {
         override def fly = {
             "I fly good"
@@ -688,90 +695,265 @@ Person("Nio") match {
     </section>
 </section>
 <section>
-<section>
-    <h2>II.Types.Monads</h2>
-    <h4>Monad is a group of classes, that serves a single purpose</h4>
-    <h3>Execute computations controlled by monad</h3>
-    <h4 class="fragment">Scared? </h4>
-    <h4 class="fragment">Let's write a simple monad</h4>
-</section>
-<section>
-    <h2>II.Types.Validation Monad</h2>
-    <pre>
-        <code class="scala" style="font-size: 18px;">
-sealed trait Validation[+A] {
-    //also known in haskell as >>= or bind in theory
-    def flatMap[B](f: (A) => Validation[B]): Validation[B] = this match {
-        case Success(a:A) => f(a)
-        case fail@Failure(error:String) => fail
-    }
-    def map[B](f: A=>B): Validation[B] = this match {
-        case Success(a:A) => Success(f(a))
-        case fail@Failure(error:String) => fail
-    }
-    //works only if you use no yield in for
-    def foreach(f: A => Unit): Unit = this match {
-        case Success(a:A) => f(a)
-        case _ =>
-    }
-}
-case class Success[+A](value:A) extends Validation[A]
-case class Failure(error:String) extends Validation[Nothing]
-        </code>
-    </pre>
-</section>
-<section>
-    <h2>II.Types.Validation Monad</h2>
-    <h4>Lets add some sugar</h4>
-    <pre>
-        <code class="scala" style="font-size: 18px;">
-implicit class ValidationPimp[A](obj: Option[A]){
-    def ~(errorMessage:String):Validation[A] = obj match {
-        case Some(value) => Success(value)
-        case None => Failure(errorMessage)
-    }
-}
-        </code>
-    </pre>
-</section>
-<section>
-<h2>II.Types.Validation Monad</h2>
-<h4>Usage</h4>
-    <pre>
-        <code class="scala" style="font-size: 18px;">
-case class Cat(adressOnLeash:Option[String])
-    def foundCat(cat:Cat) {
-    val result = for{
-        adress <- cat.adressOnLeash ~ "take him home"
-    } yield adress
-    println(result)
-}
-
-foundCat(Cat(Some("Home, app.1"))) // Home, app.1
-foundCat(Cat(None)) // take him home
-        </code>
-    </pre>
-</section>
-</section>
-<section>
     <h2>Most used standard monads</h2>
-    <ul>
-        <li>List :)</li>
+    <h4>Have you ever used a monad?</h4>
+    <ul class="fragment" style="list-style-type: none; ">
+        <li>List <span class="fragment">     ... :)</span></li>
         <li>Option</li>
         <li>Future</li>
     </ul>
 </section>
 <section>
-    <h2>Option</h2>
+    <section>
+    <h4>Standard monads. The problem</h4>
+    <pre class="fragment">
+        <code class="java">
+    public void activeAccountBalance(id:UUID){
+        BigDecimal value =
+            customer.getAccount(id).getActiveBankAccount().getBalance()
+    }//can you do something like that in real system?
+        </code>
+    </pre>
+    <pre class="fragment">
+        <code class="java">
+    // well maybe you recognize this one?
+    if(id != null && !id.isEmpty()) {
+        if(customer != null) {
+           Account account = customer.getAccount(id);
+           if(account!= null){
+                if(account.getActiveBankAccount()!=null){
+                   return account.getActiveBankAccount().getBalance()
+                }
+            }
+        }
+    }
+    return null; //Issue is that the code is ugly
+        </code>
+    </pre>
+        </section>
+    <section>
+        <h4>You think, maybe early returns are better?</h4>
+         <pre class="fragment">
+        <code class="java">
+            if(id == null || id.isEmpty())  return null;
+            if(customer == null) return null;
+            Account account = customer.getAccount(id);
+            if(account == null) return null;
+            if (account.getActiveBankAccount() == null) return null;
+            return account.getActiveBankAccount().getBalance()
+        </code>
+    </pre>
+        <h4 class="fragment">UGLY!</h4>
+    </section>
+
+    <section>
+        <h4>My first reaction was: does Scala offer something else is i still use nulls?..</h4>
+        <h4 class="fragment">NO</h4>
+    </section>
+    <section>
+        <h4>Listen to Mr. Mackey</h4>
+        <img src="img/mackey.jpg"/>
+    </section>
+    <section>
+       <h2>Option</h2>
+        <h4>Lets assume we have data like that, requested from db</h4>
+        <pre>
+            <code class="scala">
+val id:UUID = ..//
+val customers = Option(
+    List(
+        Customer(id,
+            Option(Accounts(
+                List(Account(true, Option(BigDecimal("20"))),
+                     Account(false, Option(BigDecimal("25")))))))
+    )
+)
+            </code>
+        </pre>
+    </section>
+    <section>
+<h2>Option</h2>
+<h4>flatMap oneliner</h4>
+    <pre>
+        <code class="scala">
+def getActiveAccountBalance(idOption: Option[UUID]):BigDecimal = {
+    val balanceOpt = idOption.map(id => customers.flatMap(db => db.find(_.id == id).flatMap(c => c.accounts.flatMap(a => a.getActive.flatMap( active=> active.balance)))))
+    balanceOpt getOrElse BigDecimal(0)
+}
+        </code>
+    </pre>
+    <h4 class="fragment">Why not map? Why flatMap?</h4>
+    <h4 class="fragment">Option[Option[Option[Option[Option[Option[scala.BigDecimal]]]]]]</h4>
+    </section>
+    <section>
+        <h2>Option</h2>
+        <h4>for</h4>
+    <pre>
+        <code class="scala">
+def getActiveAccountBalance(idOption: Option[UUID]):BigDecimal = {
+    val bOpt = for {
+        id <-idOption
+        fromDb <- customers
+        customer <- fromDb.find(_.id == id)
+        accounts <- customer.accounts
+        active <- accounts.getActive
+        balance <- active.balance
+    } yield balance
+    bOpt getOrElse BigDecimal(0)
+}
+        </code>
+    </pre>
+        <h4 class="fragment">Beautiful</h4>
+    </section>
+</section>
 </section>
 <section>
-    <h2>Future</h2>
+    <section>
+        <h2>Future</h2>
+        <h4>When to use it?</h4>
+        <br>
+        <h4 class="fragment">'Heavy' operations</h4>
+        <h4 class="fragment">Working with filesystem</h4>
+        <h4 class="fragment">Working with database</h4>
+        <h4 class="fragment">Wait for some response from other system</h4>
+        <h4 class="fragment">etc..</h4>
+    </section>
+    <section>
+        <h2>Future</h2>
+        <h4>Futures are just a type</h4>
+        <pre>
+            <code class="scala">
+                import scala.concurrent._
+                object DB{
+                    def getFriends = List("Masha","Sasha","Kasha")
+                }
+                val friendsFuture :Future[List[String]] = future {
+                    DB.getFriends
+                }
+
+                // friendsFuture.value - blocking
+                friendsFuture onComplete (result => print(result))
+            </code>
+        </pre>
+    </section>
+    <section>
+        <h2>Future</h2>
+        <h4>Futures are composable</h4>
+        <pre>
+            <code>
+    def currentUser: Future[User] = ???
+    def getBasket(user: User): Future[Basket] = ???
+    def addSteamBox(basket: Basket): Future[Int] = ???
+    def sendResponse(msg:String) {}
+            </code>
+        </pre>
+        <pre>
+            <code class="scala">
+    addSteamBox(getBasket(currentUser))
+            </code>
+        </pre>
+        <pre>
+            <code class="scala">
+    val result = for {
+        user <- currentUser
+        basket <- getBasket(user)
+        itemsCount <- addSteamBox(basket)
+    } yield {
+        sendResponse("Items: "+itemsCount)
+    }
+    for (e <- result.failed){
+        sendResponse(e.toString)
+    }
+            </code>
+        </pre>
+    </section>
+</section>
+<section>
+    <section>
+        <h2>II.Types.Monads</h2>
+        <h4>Monad is a group of classes, that serves a single purpose</h4>
+        <h3>Execute computations controlled by monad</h3>
+        <h4 class="fragment">Scared? </h4>
+        <h4 class="fragment">Let's write a simple monad</h4>
+    </section>
+    <section>
+        <h2>II.Types.Validation Monad</h2>
+    <pre>
+        <code class="scala" style="font-size: 18px;">
+    sealed trait Validation[+A] {
+        //also known in haskell as >>= or bind in theory
+        def flatMap[B](f: (A) => Validation[B]): Validation[B] = this match {
+            case Success(a:A) => f(a)
+            case fail@Failure(error:String) => fail
+        }
+        def map[B](f: A=>B): Validation[B] = this match {
+            case Success(a:A) => Success(f(a))
+            case fail@Failure(error:String) => fail
+        }
+        //works only if you use no yield in for
+            def foreach(f: A => Unit): Unit = this match {
+            case Success(a:A) => f(a)
+            case _ =>
+        }
+    }
+    case class Success[+A](value:A) extends Validation[A]
+    case class Failure(error:String) extends Validation[Nothing]
+        </code>
+    </pre>
+    </section>
+    <section>
+        <h2>II.Types.Validation Monad</h2>
+        <h4>Lets add some sugar</h4>
+    <pre>
+        <code class="scala" style="font-size: 18px;">
+    implicit class ValidationPimp[A](obj: Option[A]){
+        def ~(errorMessage:String):Validation[A] = obj match {
+            case Some(value) => Success(value)
+            case None => Failure(errorMessage)
+        }
+    }
+        </code>
+    </pre>
+    </section>
+    <section>
+        <h2>II.Types.Validation Monad</h2>
+        <h4>Usage</h4>
+    <pre>
+        <code class="scala" style="font-size: 18px;">
+        case class Cat(adressOnLeash:Option[String])
+            def foundCat(cat:Cat) {
+              val result = for{
+                adress <- cat.adressOnLeash ~ "take him home"
+              } yield adress
+            println(result)
+        }
+        foundCat(Cat(Some("Home, app.1"))) // Home, app.1
+        foundCat(Cat(None)) // take him home
+        </code>
+    </pre>
+    </section>
+</section>
+<section>
+    <h2>Thats it about types and monads</h2>
+    <h2>Question time!</h2>
+    <img src="img/question.jpg"/>
 </section>
 <section>
     <h2>Asynchronous design</h2>
+    <h4>What does it mean to write an asynchronous code?</h4>
+    <br>
+    <h4 class="fragment">Don't ever wait for anything</h4>
+    <h4 class="fragment">Seriously</h4>
 </section>
 <section>
-    <h2>Web</h2>
+    <h2>Actor</h2>
+    <h4>Consists of 2 parts</h4>
+    <h4 class="fragment">Body</h4>
+    <h4 class="fragment">Messages queue</h4>
+</section>
+
+<section>
+    <h2>Demo</h2>
 </section>
 </div>
 </div>
