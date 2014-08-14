@@ -67,30 +67,30 @@
 <section>
    <section>
         <h2>What does <span style="color:#4477AA">concurrent</span> code consist of?</h2>
-        <h4 class="fragment"> Consumers/workers/threads/processes doing some work silmultaniously</h4>
+        <h4 class="fragment"> Consumers/workers/threads/processes doing some work simultaneously</h4>
         <h4 class="fragment"> If you have a bad luck, you have shared mutable state.</h4>
+        <h4 class="fragment">Concurrency is low level.</h4>
         <text class="fragment" style="color:red">It hurts.</text>
-        <h4 class="fragment">Classical concurrency is low level.</h4>
     </section>
     <section>
-    <h4> What will you experience writing classy concurrent code?(short list)</h4>
+    <h4> What will you experience writing concurrent code?(short list)</h4>
         <ul>
             <li class="fragment"> Deadlocks </li>
-            <li class="fragment"> Untraceable or nearly untraceable behavior </li>
+            <li class="fragment"> Untraceable or nearly untraceable behaviour </li>
             <li class="fragment"> Bugs is much more difficult to reproduce</li>
             <li class="fragment"> Threads starvation and bottlenecks</li>
             <li class="fragment"> Memory usage issues, like cache miss</li>
-            <li class="fragment"> Inconsistent changes, when you forget to restict resource access, phantom reads</li>
+            <li class="fragment"> Inconsistent changes, when you forget to restrict resource access, phantom reads</li>
         </ul>
     </section>
     <section>
         <h1> Can you avoid writing concurrent code?</h1>
-        <h4> No and deal with it </h4>
-        <h1> Can you do it fancy with less hardcore? </h1>
-        <h4> Yes </h4>
+        <h4 class="fragment"> No and deal with it </h4>
+        <h1 class="fragment"> Can you do it fancy with less hardcore? </h1>
+        <h4 class="fragment"> Yes </h4>
     </section>
     <section>
-        <h2> What are we dealing with, just to start </h2>
+        <h1>Underlying</h1>
     </section>
     <section>
         <h1> Process, thread </h1>
@@ -100,7 +100,7 @@
             <h4 class="fragment">  The process "owns" all the resources like memory, file handles, sockets, device handles, etc. </h4>
         </div>
         <div class="fragment"> 
-            <h2 class="fragment"> Timeslicing and context switch </h2>
+            <h2 class="fragment"> Time slicing and context switch </h2>
             <h4 class="fragment"> You need to think of a great effort system does to switch context when time slice ends</h4>
         </div>
         <h2 class="fragment" style="color:#4477AA"> This things are physical</h2>
@@ -109,7 +109,7 @@
         <h1> Green threads </h1>
         <h4 class="fragment"> Not scheduled by OS, instead managed by Virtual Machine </h4>
         <h4 class="fragment"> Used memory is declared by VM </h4>
-        <h4 class="fragment"> Lots of languagess support them - Java, Go, Python, Haskell, Rust, Erlang(green processes), Smalltalk, Lua
+        <h4 class="fragment"> Lots of languages support them - Java, Go, Python, Haskell, Rust, Erlang(green processes), Smalltalk, Lua
     </section>
     <section>
         <h1>Locks, semaphores</h1>
@@ -117,25 +117,25 @@
     </section>
     <section>
         <h2> Futures </h2>
-        <h4 class="fragment"> Future is a function executed in another thread which results with something</h4>
-        <h4 class="fragment"> It may be either success or an error </h4>
-        <h4 class="fragment"> Success means future return a value, error may be exception, or bussiness logic fail. </h4>
-            add pics
+        <h4 class="fragment"> Future is a function executed in another thread which results with result</h4>
+        <h4 class="fragment"> result may be either success or an error </h4>
+        <h4 class="fragment"> Success means future return a value, error - exception occurred or business logic failed </h4>
+            
         <h2> Promises </h2>
         <h4 class="fragment"> Are a way future acknowledge each other about results </h4>
         <h4 class="fragment"> Futures can subscribe to promises to be executed one by one </h4>
-        <h4 class="fragment"> Withing promises futures can be explicitly controlled </h4>
-            add pics
+        <h4 class="fragment"> Within promises futures can be explicitly controlled </h4>
+            
     </section>
     <section> 
         <h2 style="color:red"> Coroutine with iterator </h2>
         <h4 class="fragment"> Function that is run on a single thread, but ends up with yielding to caller</h4>
         <h4 class="fragment"> Generator is a simple coroutine</h4>
-        add pics
+        
     </section>
 </section>
 <section>
-    <h1> And also we have something builded on top of it</h1>
+    <h1> HIgh level concepts</h1>
 </section>
 <section>
     <section>
