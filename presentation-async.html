@@ -49,93 +49,242 @@
 
 </section>
 <section>
-    <h2>Plan</h2>
-
-    <div style="display:block; margin-left:80px">
-        <div style="text-align: left;">I. Introduction</div>
-        <div style="text-align: left;">II. What is there out there</div>
-        <div style="text-align: left;">III. Critics and best practices</div>
-        <div style="text-align: left;">IV. Demo</div>
-    </div>
+    <h1>What is inside</h1>
+    <h3 class="fragment">Concurrency way</h3>
+    <h3 class="fragment"> Fancy and asynchronous</h3>
+    <h3 class="fragment"> Web specials</h3>
 </section>
-<!-- INTRO -->
-<section>
-        <h2>Introduction</h2>
-        <h4 class="fragment">First of all </h4>
-        <h3 class="fragment">Concurrency</h3>
+<section> 
+    <h1> Major spoiler</h1>
+    <h3> We won't be talking about semaphores, mutexes, monitors or locks</h3>
+    <h3> Why? </h3>
+    <h3> It is not about shared mutable state! </h3>
+</section>
+<section>     
+    <img src="img/omg.jpg" height="200px" /> 
 </section>
 <section>
    <section>
-        <h2>What does <span style="color:#4477AA">concurrent</span> code consist of?</h2>
-        <h4 class="fragment"> Consumers/workers/threads/processes doing some work simultaneously</h4>
-        <h4 class="fragment"> If you have a bad luck, you have shared mutable state.</h4>
-        <h4 class="fragment">Concurrency is low level.</h4>
+       <h2>What is sad about concurrency?</h2>
+       <div class="fragment">
+            <h2 >Concurrent doesn't mean parallel</h2>
+            <img src="img/sad_panda_painting.jpg" height="150px" />
+        </div>
+        <h4 class="fragment">Concurrent execution only means tasks many executed in some time frame</h4>
+        <h4 class="fragment">... but not neccesary at the same time</h4>
+   </section>
+   <section>
+        <h4><span style="color:#4477AA">Concurrency</span> starts when you don't have enough cores for each process/thread</h4>        
         <text class="fragment" style="color:red">It hurts.</text>
     </section>
+</section>
+<section>
     <section>
-    <h4> What will you experience writing concurrent code?(short list)</h4>
-        <ul>
-            <li class="fragment"> Deadlocks </li>
-            <li class="fragment"> Untraceable or nearly untraceable behaviour </li>
-            <li class="fragment"> Bugs is much more difficult to reproduce</li>
-            <li class="fragment"> Threads starvation and bottlenecks</li>
-            <li class="fragment"> Memory usage issues, like cache miss</li>
-            <li class="fragment"> Inconsistent changes, when you forget to restrict resource access, phantom reads</li>
-        </ul>
-    </section>
-    <section>
-        <h1> Can you avoid writing concurrent code?</h1>
-        <h4 class="fragment"> No and deal with it </h4>
-        <h1 class="fragment"> Can you do it fancy with less hardcore? </h1>
-        <h4 class="fragment"> Yes </h4>
-    </section>
-    <section>
-        <h1>Underlying</h1>
-    </section>
-    <section>
-        <h1> Process, thread </h1>
-        <div class="fragment">
-            <h4 class="fragment"> Managed by OS which means Kernel. </h4>
-            <h4 class="fragment"> Threads has their own memory and independent flows of control. Within a process. </h4>
-            <h4 class="fragment">  The process "owns" all the resources like memory, file handles, sockets, device handles, etc. </h4>
+        <h1> Native threads </h1>
+        <div>
+            <h4 class="fragment"> Managed by OS, so this 'managment' implementation heavily depends on OS</h4>
+            <h4 class="fragment"> Kernel-level sync on critical sections </h4>
+            <h4 class="fragment"> Really supports multiple CPUs <br/> if a system has n CPUs, then up to n threads can run simultaneously </h4>
         </div>
-        <div class="fragment"> 
-            <h2 class="fragment"> Time slicing and context switch </h2>
-            <h4 class="fragment"> You need to think of a great effort system does to switch context when time slice ends</h4>
+    </section>
+    <section>
+            <div >
+                <h4> Pre-emptive scheduling </h4>
+                <img src="img/pre.png"/>
+            </div>
+            <h4 class="fragment"> Scheduler has prioraized queue of threads and switches time to time</h4>
+    </section>
+    <section>
+        <div> 
+            <h2> Time slicing and context switch </h2>
+            <ul>
+                <li class="fragment">Decide whether to do a context switch</li>
+                <li class="fragment">Save process with context</li>
+                <li class="fragment">Find best process to execute</li>
+                <li class="fragment">Restore context</li>
+            </ul>
         </div>
-        <h2 class="fragment" style="color:#4477AA"> This things are physical</h2>
+    </section>   
+    <section> 
+        <h2>Summary </h2>
+        <h4> Threads may be executed parallel </h4>
+        <h4> Switching is really heavy </h4>
+        <h4> Thread can be interrupted at any time </h4>
+        <h4> Scheduler and theads amout limit is OS dependent</h4>
+    </section>
+</section>
+<section>
+    <section>
+        <h2> Non preemptive or cooperative multitasking</h2>
+        <img src="img/coop.png"/>
     </section>
     <section>
-        <h1> Green threads </h1>
-        <h4 class="fragment"> Not scheduled by OS, instead managed by Virtual Machine </h4>
-        <h4 class="fragment"> Used memory is declared by VM </h4>
-        <h4 class="fragment"> Lots of languages support them - Java, Go, Python, Haskell, Rust, Erlang(green processes), Smalltalk, Lua
+        <h1>Green threads</h1>
+        <h4 class="fragment"> It is run as one native thread! </h4>
+        <h4 class="fragment"> Yes it is concurrent </h4>
+        <h4 class="fragment"> Scheduling and switching is managed by Virtual Machine or lib </h4>
+        <h4 class="fragment"> Quite deterministic scheduling, language dependent </h4>
+        <h4 class="fragment"> Lightweight since no kernel objects are created </h4>
+        <h4 class="fragment"> Large number of threads can be started </h4>
     </section>
     <section>
-        <h1>Locks, semaphores</h1>
-        <h4> Low level, and you know it already</h4>
+        <h3 class="fragment">Small memory footpint</h3>
+        <h4 class="fragment" style="color:#4477AA">Memory size is a parameter to VM or library</h4>
+
+        <h3 class="fragment">Controllable switching</h3>
+        <h4 class="fragment" style="color:#4477AA">Here were scheduler concept appears</h4>
+
+        <h3 class="fragment">Is easy to create</h3>
+        <h4 class="fragment" style="color:#4477AA">You only need to reserve memory and being put into scheduler queue</h4>
+    </section>
+</section>
+<section>
+    <section>
+        <h2> Coroutines - Python</h2>
+        <h4 class="fragment"> Not a native feature of a language</h4>    
+        <h4 class="fragment"> Pretty low level</h4>    
+        <h4 class="fragment"> Based on coroutines</h4>
+    </section>
+    <section>       
+        <h2>Generator</h2>
+        <h4 class="fragment">Intended to generate values on demand </h4>
+        <pre>
+             <code class="python">
+def get_primes(number):
+    while True:
+        if is_prime(number): // you know how to check it, right?
+            yield number
+        number += 1
+#Example of usage
+primes_up_to_2000 = for next_prime in get_primes(3) 
+    if next_prime > 2000 return
+             </code>
+        </pre>
+    </section>
+    <section>
+        <h2>Coroutine</h2>
+        <h4 class="fragment">Intended to consume values</h4>
+        <pre>
+             <code class="python">
+def grep(pattern):
+        print "Looking for %s" % pattern
+        while True:
+            line = (yield)
+            if pattern in line:
+                print line,
+
+g = grep("python")
+# Notice how you don't need a next() call here
+g.send("Yeah, but no, but yeah, but no")
+g.send("A series of tubes")
+g.send("python generators rock!") // this will be printed
+             </code>
+        </pre>
+    </section>
+    <section>
+        <h4>Pipeline masterpiece</h4>
+        <pre>
+        <code class="python">
+def follow(thefile, target):
+thefile.seek(0,2)      # Go to the end of the file
+while True:
+     line = thefile.readline()
+     if not line:
+         time.sleep(0.1)    # Sleep briefly
+         continue
+     target.send(line)
+
+# A filter.
+@coroutine
+def grep(pattern,target):
+    while True:
+        line = (yield)           # Receive a line
+        if pattern in line:
+            target.send(line)    # Send to next stage
+
+# A sink.  A coroutine that receives data
+@coroutine
+def printer():
+    while True:
+         line = (yield)
+         print line,
+
+# Broadcast a stream onto multiple targets
+@coroutine
+def broadcast(targets):
+    while True:
+        item = (yield)
+        for target in targets:
+            target.send(item)
+
+# Example use
+if __name__ == '__main__':
+    f = open("access-log")
+    p = printer()
+    follow(f,
+       broadcast([grep('python',p),
+                  grep('ply',p),
+                  grep('swig',p)])
+           )
+        </code>
+    </pre>
+    </section>
+    <section>
+        <h4>Cooperative multitasking on coroutines is as simple as this:</h4>
+        <h4>We know exactly when coroutine ends, on yield</h4>
+        <h4>When it happens scheduler just selects a next coroutine to be executed</h4>
+    </section>
+</section>
+<section>
+    <section>
+        <h2>Goroutines, Go</h2>
+        <h4>Original language feature</h4>
+        <h4>Motivation - i still want parallelism!</h4>
+        <h4>Goroutines multiplexes on OS threads, so even if any will be block, other goroutines can still be executed</h4>
+    </section>
+    <section>
+        <h2>Goroutine scheduing points</h2>
+        <h4>Channel sending and receiving</h4>
+        <h4>Calling another goroutine</h4>
+        <h4>Blocking syscall</h4>
+        <h4>GC</h4>
+    </section>
+    <section>
+        <h4>Multiplexing</h4>
+        <h4>At any call to the operating system the call to entersyscall informs the runtime that this thread is about to block </h4>
+        <h4>Runtime spinnes up a new thread which will service other goroutines while this current thread blocked.</h4>
+        <h4>So Go process contains OS threads</h4>
+        <h4>Go runtime taking care of assigning a runnable Goroutine to a free operating system thread</h4>
+    </section>
+    <section>
+        <h1>Go is automagical</h1>
+    </section>
+</section>
+<section>
+    <h1>Javascript Event loop </h1>
+</section>
+<section>
+    <h1> HIgh level concepts</h1>
+</section>
+<section>
+    <section>
+        Continuation passing style
     </section>
     <section>
         <h2> Futures </h2>
         <h4 class="fragment"> Future is a function executed in another thread which results with result</h4>
         <h4 class="fragment"> result may be either success or an error </h4>
         <h4 class="fragment"> Success means future return a value, error - exception occurred or business logic failed </h4>
-            
+    </section>
+    <section>
         <h2> Promises </h2>
         <h4 class="fragment"> Are a way future acknowledge each other about results </h4>
         <h4 class="fragment"> Futures can subscribe to promises to be executed one by one </h4>
         <h4 class="fragment"> Within promises futures can be explicitly controlled </h4>
-            
-    </section>
-    <section> 
-        <h2 style="color:red"> Coroutine with iterator </h2>
-        <h4 class="fragment"> Function that is run on a single thread, but ends up with yielding to caller</h4>
-        <h4 class="fragment"> Generator is a simple coroutine</h4>
-        
     </section>
 </section>
 <section>
-    <h1> HIgh level concepts</h1>
+    <h2>Agent</h2>
 </section>
 <section>
     <section>
@@ -168,10 +317,6 @@
         <h4> Manage resource usage </h4>
     </section>
 </section>
-<section>
-    
-</section>
-
 <section>
     <h2>Demo</h2>
 </section>
