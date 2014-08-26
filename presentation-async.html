@@ -74,7 +74,8 @@
     <h3 class="fragment"> We won't be talking about semaphores, mutexes, monitors or locks</h3>
     <h3 class="fragment"> Well, maybe a bit</h3>
 </section>
-<section>     
+<section>    
+    <h4>are you excited?</h4>
     <img src="img/omg1.jpg" /> 
 </section>
 <section>
@@ -88,8 +89,8 @@
         <h4 class="fragment">... but not neccesary at the same time</h4>
    </section>
    <section>
-        <h4><span style="color:#4477AA">Concurrency</span> starts when you don't have enough cores for each process/thread</h4>        
-        <text class="fragment" style="color:red">It hurts.</text>
+        <h4><span style="color:#4477AA">Concurrency</span> starts when you don't have enough cores for each process/thread</h4>               
+        <h4 class="fragment"><span style="color:#4477AA">Concurrency</span> is also a way to structure programm(Go approach)</h4>
     </section>
 </section>
 <section>
@@ -111,7 +112,8 @@
     <section>
         <div> 
             <h2>Time slice or quantum</h2>
-                <text class="fragment">The scheduler is run once every time slice to choose the next process to run</text>
+            <text class="fragment">The scheduler is run once every time slice to choose the next process to run</text>
+            
             <h2> Context switch </h2>
             <ul>
                 <li class="fragment">Decide whether to do a context switch</li>
@@ -165,7 +167,7 @@
 </section>
 <section>
     <section>
-        <h2> Greenlets - Python</h2>
+        <h1> Greenlets - Python</h1>
         <img src="img/py.png"/>
         <h4 class="fragment"> Not a native feature of a language</h4>    
         <h4 class="fragment"> Pretty low level</h4>    
@@ -190,9 +192,22 @@ primes_up_to_2000 = for next_prime in get_primes(3)
     </section>
     <section>
         <h2>Coroutine</h2>
-        <h4 class="fragment">Intended to consume values</h4>
+        <pre>
+        <code class="python">
+def coroutine(func):
+    def start(*args, **kwargs):
+        g = func(*args, **kwargs)
+        g.next()
+        return g
+return start
+</code>
+</pre>
+    </section>
+    <section>
+        <h4 class="fragment">Coroutine is intended to consume values</h4>
         <pre>
              <code class="python">
+@coroutine
 def grep(pattern):
         print "Looking for %s" % pattern
         while True:
@@ -257,24 +272,41 @@ if __name__ == '__main__':
     </pre>
     </section>
     <section>
-        <h2>Greenlet</h2>
+        <h2>Greenlets with gevent</h2>
         <pre>
             <code class="python">
-from greenlet import greenlet
+# Note: Remember to ``pip install pyzmq gevent_zeromq``
+import gevent
+from gevent_zeromq import zmq
 
-def test1():
-    print 12
-    gr2.switch()
-    print 34
+# Global Context
+context = zmq.Context()
 
-def test2():
-    print 56
-    gr1.switch()
-    print 78
+def server():
+    server_socket = context.socket(zmq.REQ)
+    server_socket.bind("tcp://127.0.0.1:5000")
 
-gr1 = greenlet(test1)
-gr2 = greenlet(test2)
-gr1.switch()  
+    for request in range(1,10):
+        server_socket.send("Hello")
+        print('Switched to Server for %s' % request)
+        # Implicit context switch occurs here
+        server_socket.recv()
+
+def client():
+    client_socket = context.socket(zmq.REP)
+    client_socket.connect("tcp://127.0.0.1:5000")
+
+    for request in range(1,10):
+
+        client_socket.recv()
+        print('Switched to Client for %s' % request)
+        # Implicit context switch occurs here
+        client_socket.send("World")
+
+publisher = gevent.spawn(server)
+client    = gevent.spawn(client)
+
+gevent.joinall([publisher, client])
             </code>
         </pre>
     </section>
@@ -360,7 +392,7 @@ class Scheduler(object):
 </section>
 <section>
     <section>
-        <h2>Goroutines, Go</h2>
+        <h1>Goroutines, Go</h1>
         <div style="font-size:14px">it is gopher</div>
         <img src="img/go.png"/>
         <h4 class="fragment">Goroutines are also coop-multitasking</h4>
@@ -403,8 +435,8 @@ func main() {
     fmt.Scanln(&input)
     fmt.Println("done")
 }
-</code>
-</pre>
+        </code>
+    </pre>
     </section>
     <section>
         <h2>Goroutine scheduling points</h2>
@@ -429,37 +461,46 @@ func main() {
     </section>
     <section>
         <h3>Lets check out how easy is this thing to use</h3>
-        
-
+        nicest examples ever
     </section>
 </section>
 <section>
-    <h1>Javascript Event loop </h1>
-</section>
-<section>
     <section>
-        Continuation passing style
+        <h1>Event, Javascript</h1>
+        <img src="img/js.png"/>
     </section>
     <section>
-        <h2> Futures </h2>
-        <h4 class="fragment"> Future is a function executed in another thread which results with result</h4>
-        <h4 class="fragment"> result may be either success or an error </h4>
-        <h4 class="fragment"> Success means future return a value, error - exception occurred or business logic failed </h4>
+        <h1>So...</h1>
+        <h4 class="fragment">JS is single threaded</h4>
+        <h4 class="fragment">JS doesn't have coroutines yet(</h4>
+        <h4 class="fragment">But it has event loop and events, and callbacks ofcourse</h4>
     </section>
     <section>
-        <h2> Promises </h2>
-        <h4 class="fragment"> Are a way future acknowledge each other about results </h4>
-        <h4 class="fragment"> Futures can subscribe to promises to be executed one by one </h4>
-        <h4 class="fragment"> Within promises futures can be explicitly controlled </h4>
+        <h4 class="fragment">Basially how the flow really works</h4>
+        <img src="img/event-loop.png"/>
+        <pre class="fragment">
+        <code class="javascript">
+ while(queue.waitForMessage()){
+  queue.processNextMessage();
+}
+        </code>
+        </pre>
     </section>
-</section>
-<section>
-    <h2>Agent</h2>
+    <section>
+        <h3>Do you remember me saying javascript is single threaded?</h3>
+        <img class="fragment" src="img/lied.png"/>
+        <h3 class="fragment">If you use node.js</h3>
+    </section>
+    <section>
+        <h2>Web workers</h2>
+        <h4>Web worker can receive/send messages</h4>
+        <h4>This is new, fork-exec thread, no state is shared with parent</h4>
+    </section>
 </section>
 <section>
     <section>
         <h2> Actor</h2>
-        <h4> Actors are based on green threads, so actors are lightweight.</h4>
+        <h4> Actors are based on green threads.</h4>
         <h4> What makes thing an actor:</h4>
         <h4 class="fragment">Inner state</h4>
         <h4 class="fragment">Messages queue</h4>   
@@ -486,6 +527,26 @@ func main() {
         <h4> Manage throttling carefully, since it might happen </h4>
         <h4> Manage resource usage </h4>
     </section>
+</section>
+<section>
+    <section>
+        Continuation passing style
+    </section>
+    <section>
+        <h2> Futures </h2>
+        <h4 class="fragment"> Future is a function executed in another thread which results with result</h4>
+        <h4 class="fragment"> result may be either success or an error </h4>
+        <h4 class="fragment"> Success means future return a value, error - exception occurred or business logic failed </h4>
+    </section>
+    <section>
+        <h2> Promises </h2>
+        <h4 class="fragment"> Are a way future acknowledge each other about results </h4>
+        <h4 class="fragment"> Futures can subscribe to promises to be executed one by one </h4>
+        <h4 class="fragment"> Within promises futures can be explicitly controlled </h4>
+    </section>
+</section>
+<section>
+    <h2>Agent</h2>
 </section>
 <section>
     <h2>Demo</h2>
