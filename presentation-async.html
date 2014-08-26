@@ -72,6 +72,7 @@
     <h1> Major spoiler</h1>
     <h3> It is not about shared mutable state!</h3>
     <h3 class="fragment"> We won't be talking about semaphores, mutexes, monitors or locks</h3>
+    <h3 class="fragment"> Well, maybe a bit</h3>
 </section>
 <section>     
     <img src="img/omg1.jpg" /> 
@@ -422,14 +423,14 @@ func main() {
     <section>
         <h2>Channels</h2>
         <h4>Goroutines can be sending each other messages</h4>
-        <h4>Channel can be buffering</h4>
+        <h4>Channels send/receive is synchronous</h4>
+        <h4>But channel can be buffered, and it becomes more like mailbox in actor</h4>
+        <h4>Chanels are also able to be multiplexed, chained and much more</h4>
     </section>
     <section>
-        <h2>Goroutines vs Actors</h2>
-        <h2>Communicating Sequential Processes</h2>
-        <h4 class="fragment"> Channels are anonymous while actors have identities</h4>
-        <h4 class="fragment">In CSP, you use channels to transmit messages, but actors can directly contact each other.</h4>
-        <h4 class="fragment">In CSP communication is done in the form of rendezvous (i.e., it is synchronous). Actors support asynchronous message passing.</h4>
+        <h3>Lets check out how easy is this thing to use</h3>
+        
+
     </section>
 </section>
 <section>
