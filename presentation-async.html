@@ -1,4 +1,4 @@
-<!doctype html>
+    <!doctype html>
 <html lang="en">
 
 <head>
@@ -33,35 +33,53 @@
 <div class="reveal">
 <div class="slides">
 <section>
-    about, link to previous presentation
-</section>
-<section>
-    <h1>Asynchronous design</h1>
+    <h2>Concurrent, Asynchronous, Efficient</h2>
+    <h2>beautiful</h2>
 
-    <div style="margin-top:200px">
-        <img src="https://cdn1.iconfinder.com/data/icons/cat-power/128/cat_purr.png">
+    <div >
+        <img src="img/reef.jpg"/>
     </div>
     <div class="absolute-element"
          style="position: absolute; width: 314px; height: 46px; z-index: 4; left: 321px; top: 567px;">
-        <span>by Roksana Seletska, Levi9</span>
+        <h3>by Roksana Seletska, Levi9</h3>
         <br>
     </div>
-
+</section>
+<section>
+    <section>
+        <h1>About me</h1>
+        <h2>Rocksy seletska</h2>
+        <div style="float:left ;padding-left:10%">
+            <img src="img/me1.jpg" height="250px" />
+            <h4>Software engineer</h4>
+            <h4>Scala  JS  Go </h4>
+        </div>
+        <div >
+            <img src="img/triggerfish.jpg" height="250px" />
+            <h4>Open water diver</h4>
+        </div>
+        <div>
+            <h4>mail to: rocksyseletska2837@gmail.com</h4>
+        </div>
+    </section>
+    <section>
+        <h3>Previous talk</h3>
+        <h3><a href="https://github.com/boui/scala-levi9-presentation">Scala intro, monads</a></h3>
+        <text>open /presentation.html</text>
+    </section>
 </section>
 <section>
     <h1>What is inside</h1>
-    <h3 class="fragment">Concurrency way</h3>
-    <h3 class="fragment"> Fancy and asynchronous</h3>
-    <h3 class="fragment"> Web specials</h3>
+    <h3 class="fragment"> Concurrent</h3>
+    <h3 class="fragment"> Asynchronous</h3>
 </section>
 <section> 
     <h1> Major spoiler</h1>
-    <h3> We won't be talking about semaphores, mutexes, monitors or locks</h3>
-    <h3> Why? </h3>
-    <h3> It is not about shared mutable state! </h3>
+    <h3> It is not about shared mutable state!</h3>
+    <h3 class="fragment"> We won't be talking about semaphores, mutexes, monitors or locks</h3>
 </section>
 <section>     
-    <img src="img/omg.jpg" height="200px" /> 
+    <img src="img/omg1.jpg" /> 
 </section>
 <section>
    <section>
@@ -70,7 +88,7 @@
             <h2 >Concurrent doesn't mean parallel</h2>
             <img src="img/sad_panda_painting.jpg" height="150px" />
         </div>
-        <h4 class="fragment">Concurrent execution only means tasks many executed in some time frame</h4>
+        <h4 class="fragment">Concurrent execution only means soma amount of tasks to be executed in some time frame</h4>
         <h4 class="fragment">... but not neccesary at the same time</h4>
    </section>
    <section>
@@ -89,14 +107,16 @@
     </section>
     <section>
             <div >
-                <h4> Pre-emptive scheduling </h4>
-                <img src="img/pre.png"/>
+                <h2> Pre-emptive scheduling </h2>
+                <img class="fragment" src="img/pre.png"/>
             </div>
             <h4 class="fragment"> Scheduler has prioraized queue of threads and switches time to time</h4>
     </section>
     <section>
         <div> 
-            <h2> Time slicing and context switch </h2>
+            <h2>Time slice or quantum</h2>
+                <text class="fragment">The scheduler is run once every time slice to choose the next process to run</text>
+            <h2> Context switch </h2>
             <ul>
                 <li class="fragment">Decide whether to do a context switch</li>
                 <li class="fragment">Save process with context</li>
@@ -105,29 +125,38 @@
             </ul>
         </div>
     </section>   
+    <section>
+        <h2>Trap(int 0x80)</h2>
+        <img src="img/flow.png" height="500px" />
+    </section>
     <section> 
         <h2>Summary </h2>
-        <h4> Threads may be executed parallel </h4>
-        <h4> Switching is really heavy </h4>
-        <h4> Thread can be interrupted at any time </h4>
-        <h4> Scheduler and theads amout limit is OS dependent</h4>
+        <h4 class="fragment"> Threads may be executed parallel </h4>
+        <h4 class="fragment"> Switching is really heavy, critical section means major bottleneck</h4>
+        <h4 class="fragment"> Thread will be interrupted on time slice end </h4>
+        <h4 class="fragment"> Scheduler and theads amount limit is OS dependent</h4>
     </section>
 </section>
 <section>
     <section>
-        <h2> Non preemptive or cooperative multitasking</h2>
-        <img src="img/coop.png"/>
+        <h4>is it deep enough?</h4>
+        <img src="img/we_must_go_deeper.jpg"/>
+    </section>
+    <section>
+        <h2> Non preemptive multitasking</h2>
+        <img class="fragment" src="img/coop.png"/>
     </section>
     <section>
         <h1>Green threads</h1>
         <h4 class="fragment"> It is run as one native thread! </h4>
-        <h4 class="fragment"> Yes it is concurrent </h4>
+        <h4 class="fragment"> Yet, it can be concurrent </h4>
         <h4 class="fragment"> Scheduling and switching is managed by Virtual Machine or lib </h4>
         <h4 class="fragment"> Quite deterministic scheduling, language dependent </h4>
         <h4 class="fragment"> Lightweight since no kernel objects are created </h4>
         <h4 class="fragment"> Large number of threads can be started </h4>
     </section>
     <section>
+        <h1>Goals</h1>
         <h3 class="fragment">Small memory footpint</h3>
         <h4 class="fragment" style="color:#4477AA">Memory size is a parameter to VM or library</h4>
 
@@ -140,7 +169,8 @@
 </section>
 <section>
     <section>
-        <h2> Coroutines - Python</h2>
+        <h2> Greenlets - Python</h2>
+        <img src="img/py.png"/>
         <h4 class="fragment"> Not a native feature of a language</h4>    
         <h4 class="fragment"> Pretty low level</h4>    
         <h4 class="fragment"> Based on coroutines</h4>
@@ -152,12 +182,13 @@
              <code class="python">
 def get_primes(number):
     while True:
-        if is_prime(number): // you know how to check it, right?
+        if is_prime(number): #you know how to check it, right?
             yield number
         number += 1
 #Example of usage
 primes_up_to_2000 = for next_prime in get_primes(3) 
     if next_prime > 2000 return
+#Result [1,2,3,5,7,11...]
              </code>
         </pre>
     </section>
@@ -177,14 +208,14 @@ g = grep("python")
 # Notice how you don't need a next() call here
 g.send("Yeah, but no, but yeah, but no")
 g.send("A series of tubes")
-g.send("python generators rock!") // this will be printed
+g.send("python generators rock!") # this will be printed
              </code>
         </pre>
     </section>
     <section>
         <h4>Pipeline masterpiece</h4>
         <pre>
-        <code class="python">
+            <code class="python">
 def follow(thefile, target):
 thefile.seek(0,2)      # Go to the end of the file
 while True:
@@ -230,41 +261,184 @@ if __name__ == '__main__':
     </pre>
     </section>
     <section>
+        <h2>Greenlet</h2>
+        <pre>
+            <code class="python">
+from greenlet import greenlet
+
+def test1():
+    print 12
+    gr2.switch()
+    print 34
+
+def test2():
+    print 56
+    gr1.switch()
+    print 78
+
+gr1 = greenlet(test1)
+gr2 = greenlet(test2)
+gr1.switch()  
+            </code>
+        </pre>
+    </section>
+    <section>
         <h4>Cooperative multitasking on coroutines is as simple as this:</h4>
         <h4>We know exactly when coroutine ends, on yield</h4>
         <h4>When it happens scheduler just selects a next coroutine to be executed</h4>
+    </section>
+    <section>
+        <pre>
+            <code class="python">
+#class to incapsulate coroutine itself with meta and target coroutine
+#Coroutines shouldn't create a loop
+class Task(object): 
+    taskid = 0
+    def __init__(self,target):
+        Task.taskid += 1
+        self.tid     = Task.taskid   # Task ID
+        self.target  = target        # Target coroutine
+        self.sendval = None          # Value to send
+
+    # Run a task until it hits the next yield statement
+    def run(self):
+        return self.target.send(self.sendval)
+            </code>
+        </pre>
+    </section>
+    <section>
+        <pre>
+            <code class="python">
+#Deterministic scheduler            
+class Scheduler(object):
+    def __init__(self):
+        self.ready   = Queue()   
+        self.taskmap = {}        
+
+    def new(self,target): #create new task and schedule it
+        newtask = Task(target)
+        self.taskmap[newtask.tid] = newtask
+        self.schedule(newtask)
+        return newtask.tid
+
+    def schedule(self,task):
+        self.ready.put(task)
+
+    #start scheduling
+    def mainloop(self):
+        while self.taskmap:
+            task = self.ready.get()
+            result = task.run()
+            self.schedule(task)
+            </code>
+        </pre>
+    </section>
+    <section>
+        <pre>
+            <code class="python">
+# ------------------------------------------------------------
+#                      === Example ===
+# ------------------------------------------------------------
+ # Two tasks
+    def foo():
+        while True:
+            print "I'm foo"
+            yield
+
+    def bar():
+        while True:
+            print "I'm bar"
+            yield    
+        
+    # Run them
+    sched = Scheduler()
+    sched.new(foo())
+    sched.new(bar())
+    sched.mainloop()
+
+# i'm foo
+# i'm bar
+            </code>
+        </pre>
     </section>
 </section>
 <section>
     <section>
         <h2>Goroutines, Go</h2>
-        <h4>Original language feature</h4>
-        <h4>Motivation - i still want parallelism!</h4>
-        <h4>Goroutines multiplexes on OS threads, so even if any will be block, other goroutines can still be executed</h4>
+        <div style="font-size:14px">it is gopher</div>
+        <img src="img/go.png"/>
+        <h4 class="fragment">Goroutines are also coop-multitasking</h4>
+        <h4 class="fragment">Original language feature</h4>
+        <h4 class="fragment">Motivation - i still want parallelism!</h4>
+        <h4 class="fragment">Goroutines multiplexes on OS threads, so even if any will be block, other goroutines can still be executed</h4>
     </section>
     <section>
-        <h2>Goroutine scheduing points</h2>
-        <h4>Channel sending and receiving</h4>
-        <h4>Calling another goroutine</h4>
-        <h4>Blocking syscall</h4>
-        <h4>GC</h4>
+    <pre>
+        <code class="go">
+func f(from string) {
+    for i := 0; i < 3; i++ {
+        fmt.Println(from, ":", i)
+    }
+}
+
+func main() {
+
+    // Suppose we have a function call `f(s)`. Here's how
+    // we'd call that in the usual way, running it
+    // synchronously.
+    f("direct")
+
+    // To invoke this function in a goroutine, use
+    // `go f(s)`. This new goroutine will execute
+    // concurrently with the calling one.
+    go f("goroutine")
+
+    // You can also start a goroutine for an anonymous
+    // function call.
+    go func(msg string) {
+        fmt.Println(msg)
+    }("going")
+
+    // Our two goroutines are running asynchronously in
+    // separate goroutines now, so execution falls through
+    // to here. This `Scanln` code requires we press a key
+    // before the program exits.
+    var input string
+    fmt.Scanln(&input)
+    fmt.Println("done")
+}
+</code>
+</pre>
     </section>
     <section>
-        <h4>Multiplexing</h4>
-        <h4>At any call to the operating system the call to entersyscall informs the runtime that this thread is about to block </h4>
-        <h4>Runtime spinnes up a new thread which will service other goroutines while this current thread blocked.</h4>
-        <h4>So Go process contains OS threads</h4>
-        <h4>Go runtime taking care of assigning a runnable Goroutine to a free operating system thread</h4>
+        <h2>Goroutine scheduling points</h2>
+        <h4 class="fragment">Channel sending and receiving</h4>
+        <h4 class="fragment">Calling another goroutine</h4>
+        <h4 class="fragment">Blocking syscall</h4>
+        <h4 class="fragment">Garbage collection</h4>
     </section>
     <section>
-        <h1>Go is automagical</h1>
+        <h2>Multiplexing</h2>
+        <h4 class="fragment">At any call to the operating system the call to entersyscall informs the runtime that this thread is about to block </h4>
+        <h4 class="fragment">Runtime spinnes up a new thread which will service other goroutines while this current thread blocked.</h4>
+        <h4 class="fragment">So Go process contains OS threads</h4>
+        <h4 class="fragment">Go runtime taking care of assigning a runnable Goroutine to a free operating system thread</h4>
+    </section>
+    <section>
+        <h2>Channels</h2>
+        <h4>Goroutines can be sending each other messages</h4>
+        <h4>Channel can be buffering</h4>
+    </section>
+    <section>
+        <h2>Goroutines vs Actors</h2>
+        <h2>Communicating Sequential Processes</h2>
+        <h4 class="fragment"> Channels are anonymous while actors have identities</h4>
+        <h4 class="fragment">In CSP, you use channels to transmit messages, but actors can directly contact each other.</h4>
+        <h4 class="fragment">In CSP communication is done in the form of rendezvous (i.e., it is synchronous). Actors support asynchronous message passing.</h4>
     </section>
 </section>
 <section>
     <h1>Javascript Event loop </h1>
-</section>
-<section>
-    <h1> HIgh level concepts</h1>
 </section>
 <section>
     <section>
