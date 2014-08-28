@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<!-- saved from url=(0065)http://www.html5rocks.com/en/tutorials/es6/promises/#toc-chaining -->
+<html lang="en" dir="ltr" itemscope="" itemtype="http://schema.org/Article" class=" js flexbox canvas canvastext webgl no-touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths adownload webaudio no-battery blobconstructor contenteditable cors csscalc cssfilters mediaqueries no-regions classlist datalistelem details texttrackapi track filereader filesystem fullscreen getusermedia gamepads xhr2 quotamanagement performance raf no-stylescoped websocketsbinary no-webintents todataurljpeg todataurlwebp webp"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="utf-8">
+  <meta property="twitter:account_id" content="1593210261">
+  <!-- Copyright (c) 2012 Google Inc.
+   *
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * you may not use this file except in compliance with the License.
+   * You may obtain a copy of the License at
+   *
+   *     http://www.apache.org/licenses/LICENSE-2.0
+   *
+   * Unless required by applicable law or agreed to in writing, software
+   * distributed under the License is distributed on an "AS IS" BASIS,
+   * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   * See the License for the specific language governing permissions and
+   * limitations under the License.
+   *
+   * Author: Jake Archibald - jakearchibald@google.com
+   *
+   * 
+   *
+  -->
+  <title>JavaScript Promises: There and back again - HTML5 Rocks</title>
+  <meta name="description" content="How to use promises natively in JavaScript.">
+  <meta name="keywords" content="html5,html 5,html5 demos,html5 examples,javascript,css3,notifications,geolocation,web workers,apppcache,file api,filereader,indexeddb,offline,audio,video,drag and drop,chrome,sse,mobile">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+
+  <link rel="shortcut icon" href="http://www.html5rocks.com/favicon.ico">
+  <link rel="alternate" type="application/rss+xml" title="HTML5 Rocks RSS" href="http://feeds.feedburner.com/html5rocks">
+
+  <meta itemprop="name" content="JavaScript Promises: There and back again - HTML5 Rocks">
+  <meta itemprop="description" content="How to use promises natively in JavaScript.">
+  
+  <meta itemprop="image" content="http://www.html5rocks.com/static/images/html5rocks-logo-wings.png">
+  
+
+  
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@ChromiumDev">
+  <meta name="twitter:creator" content="@jaffathecake">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="JavaScript Promises: There and back again - HTML5 Rocks">
+  <meta property="og:url" content="http://www.html5rocks.com/en/tutorials/es6/promises/">
+  <meta property="og:description" content="How to use promises natively in JavaScript.">
+  <meta property="og:image" content="http://www.html5rocks.com/static/images/profiles/jakearchibald.png">
+  <meta property="og:site_name" content="HTML5 Rocks - A resource for open web HTML5 developers">
+  
+
+  
+  <link rel="author" href="https://www.google.com/profiles/116237864387312784020">
+  
+  
+  <link rel="publisher" href="https://plus.google.com/+GoogleChromeDevelopers">
+
+  
+  
+  <link rel="alternate" hreflang="zh" href="http://www.html5rocks.com/zh/tutorials/es6/promises/">
+  
+  <link rel="alternate" hreflang="fr" href="http://www.html5rocks.com/fr/tutorials/es6/promises/">
+  
+  <link rel="alternate" hreflang="ja" href="http://www.html5rocks.com/ja/tutorials/es6/promises/">
+  
+  <link rel="alternate" hreflang="ko" href="http://www.html5rocks.com/ko/tutorials/es6/promises/">
+  
+  
+
+  
+    
+    <link rel="stylesheet" media="all" href="http://www.html5rocks.com/static/css/v2-combined.min.css?20131111">
+    
+
+    
+  
+
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,400italic,600,800|Source+Code+Pro" rel="stylesheet">
+
+  <link rel="apple-touch-icon" href="http://www.html5rocks.com/static/images/identity/HTML5_Badge_64.png">
+  <link rel="apple-touch-icon-precomposed" href="http://www.html5rocks.com/static/images/identity/HTML5_Badge_64.png">
+
+  <script type="text/javascript" src="./promises-catch,png_files/count.js" async=""></script><script type="text/javascript" async="" src="./promises-catch,png_files/analytics.js"></script><script type="text/javascript" async="" src="./promises-catch,png_files/analytics.js"></script><script async="" src="./promises-catch,png_files/gtm.js"></script><script async="" src="./promises-catch,png_files/analytics.js"></script><script async="" src="./promises-catch,png_files/gtm.js"></script><script src="./promises-catch,png_files/modernizr.custom.82437.js"></script><style type="text/css"></style>
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5-els.js"></script>
+  <![endif]-->
+
+  
+  
+  <style>
+    .get-example {
+      display: none;
+    }
+    dt {
+      display: block;
+      margin: 0;
+      font-weight: bold;
+      color: #333;
+    }
+    dd {
+      margin: 0 0 0.8em;
+    }
+
+    dl.inline dt {
+      display: inline;
+    }
+    dl.inline dd {
+      display: inline;
+    }
+    dl.inline dd::before {
+      content:" - ";
+    }
+    dl.inline dd::after {
+      content:"\A";
+      white-space:pre;
+    }
+  </style>
+
+<script async="" src="./promises-catch,png_files/count-data.js"></script></head>
+<body data-href="tutorials-es6-promises" onload="" class="article tutorial">
+
+  <header class="main" id="siteheader">
+    <h1 id="title">
+      <a href="http://www.html5rocks.com/en/" title="HTML5 Rocks">HTML5 Rocks</a>
+    </h1>
+    <a href="http://www.html5rocks.com/en/tutorials/es6/promises/#sitenav" id="navtoggle">Show navigation</a>
+
+    
+    <a id="toctoggle" href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc">Table of Contents</a>
+    
+
+    <nav id="sitenav">
+      <ul>
+        
+        <li id="home_menu"><a href="http://www.html5rocks.com/en/" class="home">Home</a></li>
+        
+        <li id="tutorials_menu"><a href="http://www.html5rocks.com/en/tutorials/?page=1" class="tutorials">Tutorials</a></li>
+        <li id="updates_menu"><a href="http://www.html5rocks.com/en/updates/" class="updates">Updates</a></li>
+        <li id="contrib_menu"><a href="https://github.com/html5rocks/www.html5rocks.com/blob/master/CONTRIBUTING.md" target="_blank">Contribute</a></li>
+        <li id="slides_menu"><a href="http://www.html5rocks.com/en/slides" class="slides">Slides</a></li>
+        <li id="resources_menu"><a href="http://www.html5rocks.com/en/resources" class="resources">Resources</a></li>
+      </ul>
+    </nav>
+
+    
+    <nav class="toc" id="toc">
+      <h1>Table of Contents</h1>
+
+      <ul><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-async">What's all the fuss about?</a></li><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-events-not-always-best">Events aren't always the best way</a></li><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-promise-terminology">Promise terminology</a></li><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-javascript-promises">Promises arrive in JavaScript!</a></li><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-browser-support">Browser support &amp; polyfill</a></li><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-lib-compatibility">Compatibility with other libraries</a></li><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-coding-with-promises">Complex async code made easier</a></li><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-promisifying-xmlhttprequest">Promisifying XMLHttpRequest</a></li><li><a href="./promises-catch,png_files/promises-catch,png.htm">Chaining</a></li><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-error-handling">Error handling</a></li><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-parallelism-sequencing">Parallelism and sequencing - Getting the best of both</a></li><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-api">Promise API Reference</a></li></ul>
+
+      <h1 class="visible-title">Localizations:</h1>
+      <ul>
+        
+          
+          <li><a href="http://www.html5rocks.com/zh/tutorials/es6/promises/">中文 (简体)</a></li>
+          
+          <li><a href="http://www.html5rocks.com/fr/tutorials/es6/promises/">Français</a></li>
+          
+          <li><a href="http://www.html5rocks.com/ja/tutorials/es6/promises/">日本語</a></li>
+          
+          <li><a href="http://www.html5rocks.com/ko/tutorials/es6/promises/">한국어</a></li>
+          
+          <li><a href="https://github.com/html5rocks/www.html5rocks.com/blob/master/CONTRIBUTING.md">Contribute another</a></li>
+        
+      </ul>
+    </nav>
+    
+  </header>
+
+  <div class="body-content">
+    
+
+  <section class="title">
+
+    
+
+    <section class="title-text container">
+      
+      <h1>JavaScript Promises</h1>
+      <h2>There and back again</h2>
+      
+
+      <a href="http://www.html5rocks.com/en/" class="watermark">HTML5 Rocks</a>
+    </section>
+  </section>
+
+  <article class="content-wrapper">
+
+    <section class="container">
+
+      
+
+      <div class="article-meta sticky" id="article-meta" style="top: 22px;">
+        <nav class="toc">
+          <h1>Table of Contents</h1>
+
+          <ul><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-async">What's all the fuss about?</a></li><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-events-not-always-best">Events aren't always the best way</a></li><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-promise-terminology">Promise terminology</a></li><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-javascript-promises">Promises arrive in JavaScript!</a></li><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-browser-support">Browser support &amp; polyfill</a></li><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-lib-compatibility">Compatibility with other libraries</a></li><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-coding-with-promises">Complex async code made easier</a></li><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-promisifying-xmlhttprequest">Promisifying XMLHttpRequest</a></li><li><a href="./promises-catch,png_files/promises-catch,png.htm">Chaining</a></li><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-error-handling">Error handling</a></li><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-parallelism-sequencing">Parallelism and sequencing - Getting the best of both</a></li><li><a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-api">Promise API Reference</a></li></ul>
+        </nav>
+
+        <aside class="localizations">
+          <h1>Localizations</h1>
+          <ul>
+            
+              
+              <li><a href="http://www.html5rocks.com/zh/tutorials/es6/promises/">中文 (简体)</a></li>
+              
+              <li><a href="http://www.html5rocks.com/fr/tutorials/es6/promises/">Français</a></li>
+              
+              <li><a href="http://www.html5rocks.com/ja/tutorials/es6/promises/">日本語</a></li>
+              
+              <li><a href="http://www.html5rocks.com/ko/tutorials/es6/promises/">한국어</a></li>
+              
+              <li><a href="https://github.com/html5rocks/www.html5rocks.com/blob/master/CONTRIBUTING.md">Contribute another</a></li>
+            
+          </ul>
+        </aside>
+      </div>
+      
+
+      <div class="content" id="article-content">
+
+        <section class="byline">
+
+          <div class="byline-content">
+            
+            <section class="author-images">
+              <a href="http://www.html5rocks.com/profiles/#jakearchibald">
+                <img src="./promises-catch,png_files/jakearchibald.png" itemprop="photo" alt="Jake Archibald" title="Jake Archibald">
+              </a>
+
+              
+            </section>
+
+            <section class="meta">
+              <div class="authors">
+                <strong>By</strong> <a href="http://www.html5rocks.com/profiles/#jakearchibald">Jake Archibald</a>
+                
+              </div>
+
+              
+
+              <div class="date">
+                <time pubdate=""><strong>Published:</strong> December 16th, 2013</time>
+                
+                <time class="updated"><strong>Updated:</strong> January 29th, 2014</time>
+                <span><strong>Comments:</strong> <a href="http://www.html5rocks.com/en/tutorials/es6/promises/#disqus_thread" class="load-comments" data-disqus-identifier="http://www.html5rocks.com/tutorials/es6/promises/">138</a></span>
+              </div>
+
+              <div id="notcompatible" class="hidden">
+                Your browser may not support the functionality in this article.
+              </div>
+            </section>
+            <div class="clear"></div>
+
+            
+          </div>
+        </section>
+
+        
+
+<p>Ladies and gentlemen, prepare yourself for a pivotal moment in the history of web development…</p>
+<p><em>[Drumroll begins]</em></p>
+<p>Promises have arrived natively in JavaScript!</p>
+<p><em>[Fireworks explode, glittery paper rains from above, the crowd goes wild]</em></p>
+<p>At this point you fall into one of these categories:</p>
+
+<ul>
+  <li>People are cheering around you, but you're not sure what all the fuss is about. Maybe you're not even sure what a "promise" is. You'd shrug, but the weight of glittery paper is weighing down on your shoulders. If so, don't worry about it, it took me ages to work out why I should care about this stuff. <a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-async">You probably want to begin here</a></li>
+  <li>You punch the air! About time right? You've used these Promise things before but it bothers you that all implementations have a slightly different API. What's the API for the official JavaScript version? <a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-promise-terminology">You probably want to begin here</a></li>
+  <li>You knew about this already and you scoff at those who are jumping up and down like it's news to them. Take a moment to bask in your own superiority, then head straight to the <a href="http://www.html5rocks.com/en/tutorials/es6/promises/#toc-api">API reference</a></li>
+</ul>
+
+<h2 id="toc-async">What's all the fuss about?</h2>
+
+<p>JavaScript is single threaded, meaning that two bits of script cannot run at the same time, they have to run one after another. In browsers, JavaScript shares a thread with a load of other stuff. What that stuff is differs from browser to browser, but typically JavaScript is in the same queue as painting, updating styles, and handling user actions (such as highlighting text and interacting with form controls). Activity in one of these things delays the others.</p>
+<p>As a human being, you're multithreaded. You can type with multiple fingers, you can drive and hold a conversation at the same time. The only blocking function we have to deal with is sneezing, where all current activity must be suspended for the duration of the sneeze. That's pretty annoying, especially when you're driving and trying to hold a conversation. You don't want to write code that's sneezy.</p>
+<p>You've probably used events and callbacks to get around this. Here are events:</p>
+
+<pre class="prettyprint"><span class="kwd">var</span><span class="pln"> img1 </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'.img-1'</span><span class="pun">);</span><span class="pln">
+
+img1</span><span class="pun">.</span><span class="pln">addEventListener</span><span class="pun">(</span><span class="str">'load'</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// woo yey image loaded</span><span class="pln">
+</span><span class="pun">});</span><span class="pln">
+
+img1</span><span class="pun">.</span><span class="pln">addEventListener</span><span class="pun">(</span><span class="str">'error'</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// argh everything's broken</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>This isn't sneezy at all. We get the image, add a couple of listeners, then JavaScript can stop executing until one of those listeners is called.</p>
+<p>Unfortunately, in the example above, it's possible that the events happened before we started listening for them, so we need to work around that using the "complete" property of images:</p>
+
+<pre class="prettyprint"><span class="kwd">var</span><span class="pln"> img1 </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'.img-1'</span><span class="pun">);</span><span class="pln">
+
+</span><span class="kwd">function</span><span class="pln"> loaded</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// woo yey image loaded</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+</span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">img1</span><span class="pun">.</span><span class="pln">complete</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  loaded</span><span class="pun">();</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="kwd">else</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  img1</span><span class="pun">.</span><span class="pln">addEventListener</span><span class="pun">(</span><span class="str">'load'</span><span class="pun">,</span><span class="pln"> loaded</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+img1</span><span class="pun">.</span><span class="pln">addEventListener</span><span class="pun">(</span><span class="str">'error'</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// argh everything's broken</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>This doesn't catch images that error'd before we got a chance to listen for them, unfortunately the DOM doesn't give us a way to do that. Also, this is loading one image, things get even more complex if we want to know when a set of images have loaded. </p>
+
+<h2 id="toc-events-not-always-best">Events aren't always the best way</h2>
+
+<p>Events are great for things that can happen multiple times on the same object — keyup, touchstart etc. With those events you don't really care about what happened before you attached the listener. But when it comes to async success/failure, ideally you want something like:</p>
+
+<pre class="prettyprint"><span class="pln">img1</span><span class="pun">.</span><span class="pln">callThisIfLoadedOrWhenLoaded</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// loaded</span><span class="pln">
+</span><span class="pun">}).</span><span class="pln">orIfFailedCallThis</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// failed</span><span class="pln">
+</span><span class="pun">});</span><span class="pln">
+
+</span><span class="com">// and…</span><span class="pln">
+whenAllTheseHaveLoaded</span><span class="pun">([</span><span class="pln">img1</span><span class="pun">,</span><span class="pln"> img2</span><span class="pun">]).</span><span class="pln">callThis</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// all loaded</span><span class="pln">
+</span><span class="pun">}).</span><span class="pln">orIfSomeFailedCallThis</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// one or more failed</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>This is what promises do, but with better naming. If HTML image elements had a "ready" method that returned a promise, we could do:</p>
+
+<pre class="prettyprint"><span class="pln">img1</span><span class="pun">.</span><span class="pln">ready</span><span class="pun">().</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// loaded</span><span class="pln">
+</span><span class="pun">},</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// failed</span><span class="pln">
+</span><span class="pun">});</span><span class="pln">
+
+</span><span class="com">// and…</span><span class="pln">
+</span><span class="typ">Promise</span><span class="pun">.</span><span class="pln">all</span><span class="pun">([</span><span class="pln">img1</span><span class="pun">.</span><span class="pln">ready</span><span class="pun">(),</span><span class="pln"> img2</span><span class="pun">.</span><span class="pln">ready</span><span class="pun">()]).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// all loaded</span><span class="pln">
+</span><span class="pun">},</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// one or more failed</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>At their most basic, promises are a bit like event listeners except:</p>
+
+<ul>
+  <li>A promise can only succeed or fail once. It cannot succeed or fail twice, neither can it switch from success to failure or vice versa</li>
+  <li>If a promise has succeeded or failed and you later add a success/failure callback, the correct callback will be called, even though the event took place earlier</li>
+</ul>
+
+<p>This is extremely useful for async success/failure, because you're less interested in the exact time something became available, and more interested in reacting to the outcome.</p>
+
+<h2 id="toc-promise-terminology">Promise terminology</h2>
+
+<p><a href="https://twitter.com/domenic">Domenic Denicola</a> proof read the first draft of this article and graded me "F" for terminology. He put me in detention, forced me to copy out <a href="https://github.com/domenic/promises-unwrapping/blob/master/docs/states-and-fates.md">States and Fates</a> 100 times, and wrote a worried letter to my parents. Despite that, I still get a lot of the terminology mixed up, but here are the basics:</p>
+
+<p>A promise can be:</p>
+<dl class="inline">
+  <dt>fulfilled</dt>
+  <dd>The action relating to the promise succeeded</dd>
+  <dt>rejected</dt>
+  <dd>The action relating to the promise failed</dd>
+  <dt>pending</dt>
+  <dd>Hasn't fulfilled or rejected yet</dd>
+  <dt>settled</dt>
+  <dd>Has fulfilled or rejected</dd>
+</dl>
+
+<p><a href="http://people.mozilla.org/~jorendorff/es6-draft.html#sec-promise-objects">The spec</a> also uses the term <strong>thenable</strong> to describe an object that is promise-like, in that it has a <code>then</code> method. This term reminds me of ex-England Football Manager <a href="http://en.wikipedia.org/wiki/Terry_Venables">Terry Venables</a> so I'll be using it as little as possible.</p>
+
+<h2 id="toc-javascript-promises">Promises arrive in JavaScript!</h2>
+<p>Promises have been around for a while in the form of libraries, such as:</p>
+
+<ul>
+  <li><a href="https://github.com/kriskowal/q">Q</a></li>
+  <li><a href="https://github.com/cujojs/when">when</a></li>
+  <li><a href="http://msdn.microsoft.com/en-us/library/windows/apps/br211867.aspx">WinJS</a></li>
+  <li><a href="https://github.com/tildeio/rsvp.js">RSVP.js</a></li>
+</ul>
+
+<p>The above and JavaScript promises share a common, standardised behaviour called <a href="https://github.com/promises-aplus/promises-spec">Promises/A+</a>. If you're a jQuery user, they have something similar called <a href="http://api.jquery.com/category/deferred-object/">Deferreds</a>. However, Deferreds aren't Promise/A+ compliant, which makes them <a href="https://thewayofcode.wordpress.com/tag/jquery-deferred-broken/">subtlely different and less useful</a>, so beware. jQuery also has <a href="http://api.jquery.com/Types/#Promise">a Promise type</a>, but this is just a subset of Deferred and has the same issues.</p>
+<p>Although promise implementations follow a standardised behaviour, their overall APIs differ. JavaScript promises are similar in API to RSVP.js. Here's how you create a promise:</p>
+
+<pre class="prettyprint"><span class="kwd">var</span><span class="pln"> promise </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">Promise</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">resolve</span><span class="pun">,</span><span class="pln"> reject</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// do a thing, possibly async, then…</span><span class="pln">
+
+  </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="com">/* everything turned out fine */</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    resolve</span><span class="pun">(</span><span class="str">"Stuff worked!"</span><span class="pun">);</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+  </span><span class="kwd">else</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    reject</span><span class="pun">(</span><span class="typ">Error</span><span class="pun">(</span><span class="str">"It broke"</span><span class="pun">));</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>The promise constructor takes one argument, a callback with two parameters, resolve and reject. Do something within the callback, perhaps async, then call resolve if everything worked, otherwise call reject.</p>
+<p>Like "throw" in plain old JavaScript, it's customary, but not required, to reject with an Error object. The benefit of Error objects is they capture a stack trace, making debugging tools more helpful.</p>
+<p>Here's how you use that promise:</p>
+
+<pre class="prettyprint"><span class="pln">promise</span><span class="pun">.</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">result</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="pln">result</span><span class="pun">);</span><span class="pln"> </span><span class="com">// "Stuff worked!"</span><span class="pln">
+</span><span class="pun">},</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">err</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="pln">err</span><span class="pun">);</span><span class="pln"> </span><span class="com">// Error: "It broke"</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>"then" takes two arguments, a callback for a success case, and another for the failure case. Both are optional, so you can add a callback for the success or failure case only.</p>
+<p>JavaScript promises started out in the DOM as "Futures", renamed to "Promises", and finally moved into JavaScript. Having them in JavaScript rather than the DOM is great because they'll be available in non-browser JS contexts such as Node.js (whether they make use of them in their core APIs is another question).</p>
+<p>Although they're a JavaScript feature, the DOM isn't afraid to use them. In fact, all new DOM APIs with async success/failure methods will use promises. This is happening already with <a href="https://dvcs.w3.org/hg/quota/raw-file/tip/Overview.html#idl-def-StorageQuota">Quota Management</a>, <a href="http://dev.w3.org/csswg/css-font-loading/#font-face-set-ready">Font Load Events</a>,<a href="https://github.com/slightlyoff/ServiceWorker/blob/cf459d473ae09f6994e8539113d277cbd2bce939/service_worker.ts#L17"> ServiceWorker</a>, <a href="http://webaudio.github.io/web-midi-api/#widl-Navigator-requestMIDIAccess-Promise-MIDIOptions-options">Web MIDI</a>, <a href="https://github.com/whatwg/streams#basereadablestream">Streams</a>, and more.</p>
+
+<h2 id="toc-browser-support">Browser support &amp; polyfill</h2>
+<p>There are already implementations of promises in browsers today.</p>
+<p>As of Chrome 32, Opera 19 &amp; Firefox 29, promises are enabled by default. They're in WebKit nightlies so expect them in the next release of Safari, and they're <a href="http://status.modern.ie/promiseses6?term=promise">in development in IE</a>.</p>
+
+<p>To bring browsers that lack a complete promises implementation up to spec compliance, or add promises to other browsers and Node.js, check out <a href="https://github.com/jakearchibald/ES6-Promises#readme">the polyfill</a> (2k gzipped).</p>
+
+<h2 id="toc-lib-compatibility">Compatibility with other libraries</h2>
+<p>The JavaScript promises API will treat anything with a <code>then</code> method as promise-like (or <em>thenable</em> in promise-speak <em>*sigh*</em>), so if you use a library that returns a Q promise, that's fine, it'll play nice with the new JavaScript promises.</p>
+<p>Although, as I mentioned, jQuery's Deferreds are a bit… unhelpful. Thankfully you can cast them to standard promises, which is worth doing as soon as possible:</p>
+
+<pre class="prettyprint"><span class="kwd">var</span><span class="pln"> jsPromise </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Promise</span><span class="pun">.</span><span class="pln">resolve</span><span class="pun">(</span><span class="pln">$</span><span class="pun">.</span><span class="pln">ajax</span><span class="pun">(</span><span class="str">'/whatever.json'</span><span class="pun">));</span></pre>
+
+<p>Here, jQuery's <code>$.ajax</code> returns a Deferred. Since it has a "then" method, <code>Promise.resolve</code> can turn it into a JavaScript promise. However, sometimes deferreds pass multiple arguments to their callbacks, eg:</p>
+
+<pre class="prettyprint"><span class="kwd">var</span><span class="pln"> jqDeferred </span><span class="pun">=</span><span class="pln"> $</span><span class="pun">.</span><span class="pln">ajax</span><span class="pun">(</span><span class="str">'/whatever.json'</span><span class="pun">);</span><span class="pln">
+
+jqDeferred</span><span class="pun">.</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">response</span><span class="pun">,</span><span class="pln"> statusText</span><span class="pun">,</span><span class="pln"> xhrObj</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// ...</span><span class="pln">
+</span><span class="pun">},</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">xhrObj</span><span class="pun">,</span><span class="pln"> textStatus</span><span class="pun">,</span><span class="pln"> err</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// ...</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>Whereas JS promises ignore all but the first:</p>
+
+<pre class="prettyprint"><span class="pln">jsPromise</span><span class="pun">.</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">response</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// ...</span><span class="pln">
+</span><span class="pun">},</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">xhrObj</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// ...</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>…thankfully this is usually what you want, or at least gives you access to what you want. Also, be aware that jQuery doesn't follow the convention of passing Error objects into rejections.</p>
+
+<h2 id="toc-coding-with-promises">Complex async code made easier</h2>
+<p>Right, let's code some things. Say we want to:</p>
+
+<ol>
+  <li>Start a spinner to indicate loading</li>
+  <li>Fetch some JSON for a story, which gives us the title, and urls for each chapter</li>
+  <li>Add title to the page</li>
+  <li>Fetch each chapter</li>
+  <li>Add the story to the page</li>
+  <li>Stop the spinner</li>
+</ol>
+
+<p>…but also tell the user if something went wrong along the way. We'll want to stop the spinner at that point too, else it'll keep on spinning, get dizzy, and crash into some other UI.</p>
+<p>Of course, you wouldn't use JavaScript to deliver a story, <a href="http://jakearchibald.com/2013/progressive-enhancement-is-faster/">serving as HTML is faster</a>, but this pattern is pretty common when dealing with APIs: Multiple data fetches, then do something when it's all done.</p>
+<p>To start with, let's deal with fetching data from the network:</p>
+
+<h2 id="toc-promisifying-xmlhttprequest">Promisifying XMLHttpRequest</h2>
+
+<p>Old APIs will be updated to use promises, if it's possible in a backwards compatible way. <code>XMLHttpRequest</code> is a prime candidate, but in the mean time let's write a simple function to make a GET request:</p>
+
+<pre class="prettyprint"><span class="kwd">function</span><span class="pln"> </span><span class="kwd">get</span><span class="pun">(</span><span class="pln">url</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// Return a new promise.</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">Promise</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">resolve</span><span class="pun">,</span><span class="pln"> reject</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="com">// Do the usual XHR stuff</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> req </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">XMLHttpRequest</span><span class="pun">();</span><span class="pln">
+    req</span><span class="pun">.</span><span class="pln">open</span><span class="pun">(</span><span class="str">'GET'</span><span class="pun">,</span><span class="pln"> url</span><span class="pun">);</span><span class="pln">
+
+    req</span><span class="pun">.</span><span class="pln">onload </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      </span><span class="com">// This is called even on 404 etc</span><span class="pln">
+      </span><span class="com">// so check the status</span><span class="pln">
+      </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">req</span><span class="pun">.</span><span class="pln">status </span><span class="pun">==</span><span class="pln"> </span><span class="lit">200</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="com">// Resolve the promise with the response text</span><span class="pln">
+        resolve</span><span class="pun">(</span><span class="pln">req</span><span class="pun">.</span><span class="pln">response</span><span class="pun">);</span><span class="pln">
+      </span><span class="pun">}</span><span class="pln">
+      </span><span class="kwd">else</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="com">// Otherwise reject with the status text</span><span class="pln">
+        </span><span class="com">// which will hopefully be a meaningful error</span><span class="pln">
+        reject</span><span class="pun">(</span><span class="typ">Error</span><span class="pun">(</span><span class="pln">req</span><span class="pun">.</span><span class="pln">statusText</span><span class="pun">));</span><span class="pln">
+      </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">};</span><span class="pln">
+
+    </span><span class="com">// Handle network errors</span><span class="pln">
+    req</span><span class="pun">.</span><span class="pln">onerror </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      reject</span><span class="pun">(</span><span class="typ">Error</span><span class="pun">(</span><span class="str">"Network Error"</span><span class="pun">));</span><span class="pln">
+    </span><span class="pun">};</span><span class="pln">
+
+    </span><span class="com">// Make the request</span><span class="pln">
+    req</span><span class="pun">.</span><span class="pln">send</span><span class="pun">();</span><span class="pln">
+  </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">}</span></pre>
+
+<p>Now let's use it:</p>
+
+<pre class="prettyprint"><span class="kwd">get</span><span class="pun">(</span><span class="str">'story.json'</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">response</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Success!"</span><span class="pun">,</span><span class="pln"> response</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">},</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">error</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">error</span><span class="pun">(</span><span class="str">"Failed!"</span><span class="pun">,</span><span class="pln"> error</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p><span class="live-example get-example" style="display: inline;"><a href="http://www.html5rocks.com/en/tutorials/es6/promises/story.json">Click here to see that in action</a>, check the console in DevTools to see the result.</span> Now we can make HTTP requests without manually typing <code>XMLHttpRequest</code>, which is great, because the less I have to see the infuriating camel-casing of <code>XMLHttpRequest</code>, the happier my life will be.</p>
+
+<h2 id="toc-chaining">Chaining</h2>
+<p>"then" isn't the end of the story, you can chain "then"s together to transform values or run additional async actions one after another.</p>
+
+<h3 id="toc-transforming-values">Transforming values</h3>
+<p>You can transform values simply by returning the new value:</p>
+
+<pre class="prettyprint"><span class="kwd">var</span><span class="pln"> promise </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">Promise</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">resolve</span><span class="pun">,</span><span class="pln"> reject</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  resolve</span><span class="pun">(</span><span class="lit">1</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">});</span><span class="pln">
+
+promise</span><span class="pun">.</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">val</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="pln">val</span><span class="pun">);</span><span class="pln"> </span><span class="com">// 1</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> val </span><span class="pun">+</span><span class="pln"> </span><span class="lit">2</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">val</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="pln">val</span><span class="pun">);</span><span class="pln"> </span><span class="com">// 3</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>As a practical example, let's go back to:</p>
+
+<pre class="prettyprint"><span class="kwd">get</span><span class="pun">(</span><span class="str">'story.json'</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">response</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Success!"</span><span class="pun">,</span><span class="pln"> response</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>The response is JSON, but we're currently receiving it as plain text. We could alter our get function to use the JSON <code><a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest#responseType">responseType</a></code>, but we could also solve it in promises land:</p>
+
+<pre class="prettyprint"><span class="kwd">get</span><span class="pun">(</span><span class="str">'story.json'</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">response</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> JSON</span><span class="pun">.</span><span class="pln">parse</span><span class="pun">(</span><span class="pln">response</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">response</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Yey JSON!"</span><span class="pun">,</span><span class="pln"> response</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>Since <code>JSON.parse</code> takes a single argument and returns a transformed value, we can make a shortcut:</p>
+
+<pre class="prettyprint"><span class="kwd">get</span><span class="pun">(</span><span class="str">'story.json'</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="pln">JSON</span><span class="pun">.</span><span class="pln">parse</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">response</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Yey JSON!"</span><span class="pun">,</span><span class="pln"> response</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p><span class="live-example json-example" style="display: inline;"><a href="http://www.html5rocks.com/en/tutorials/es6/promises/story.json">Click here to see that in action</a>, check the console in DevTools to see the result.</span> In fact, we could make a <code>getJSON</code> function really easily:</p>
+
+<pre class="prettyprint"><span class="kwd">function</span><span class="pln"> getJSON</span><span class="pun">(</span><span class="pln">url</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> </span><span class="kwd">get</span><span class="pun">(</span><span class="pln">url</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="pln">JSON</span><span class="pun">.</span><span class="pln">parse</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span></pre>
+
+<p><code>getJSON</code> still returns a promise, one that fetches a url then parses the response as JSON.</p>
+
+<h3 id="toc-promises-queues">Queuing asynchronous actions</h3>
+<p>You can also chain "then"s to run async actions in sequence.</p>
+<p>When you return something from a "then" callback, it's a bit magic. If you return a value, the next "then" is called with that value. However, if you return something promise-like, the next "then" waits on it, and is only called when that promise settles (succeeds/fails). For example:</p>
+
+<pre class="prettyprint"><span class="pln">getJSON</span><span class="pun">(</span><span class="str">'story.json'</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">story</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> getJSON</span><span class="pun">(</span><span class="pln">story</span><span class="pun">.</span><span class="pln">chapterUrls</span><span class="pun">[</span><span class="lit">0</span><span class="pun">]);</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">chapter1</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Got chapter 1!"</span><span class="pun">,</span><span class="pln"> chapter1</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>Here we make an async request to "story.json", which gives us a set of URLs to request, then we request the first of those. This is when promises really start to stand out from simple callback patterns.
+
+  You could even make a shortcut method to get chapters:</p>
+
+<pre class="prettyprint"><span class="kwd">var</span><span class="pln"> storyPromise</span><span class="pun">;</span><span class="pln">
+
+</span><span class="kwd">function</span><span class="pln"> getChapter</span><span class="pun">(</span><span class="pln">i</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  storyPromise </span><span class="pun">=</span><span class="pln"> storyPromise </span><span class="pun">||</span><span class="pln"> getJSON</span><span class="pun">(</span><span class="str">'story.json'</span><span class="pun">);</span><span class="pln">
+
+  </span><span class="kwd">return</span><span class="pln"> storyPromise</span><span class="pun">.</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">story</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">return</span><span class="pln"> getJSON</span><span class="pun">(</span><span class="pln">story</span><span class="pun">.</span><span class="pln">chapterUrls</span><span class="pun">[</span><span class="pln">i</span><span class="pun">]);</span><span class="pln">
+  </span><span class="pun">})</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+</span><span class="com">// and using it is simple:</span><span class="pln">
+getChapter</span><span class="pun">(</span><span class="lit">0</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">chapter</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="pln">chapter</span><span class="pun">);</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> getChapter</span><span class="pun">(</span><span class="lit">1</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">chapter</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="pln">chapter</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>We don't download "story.json" until <code>getChapter</code> is called, but the next time(s) <code>getChapter</code> is called we reuse the story promise, so story.json is only fetched once. Yay Promises!</p>
+
+<h2 id="toc-error-handling">Error handling</h2>
+<p>As we saw earlier, "then" takes two arguments, one for success, one for failure (or fulfill and reject, in promises-speak):</p>
+
+<pre class="prettyprint"><span class="kwd">get</span><span class="pun">(</span><span class="str">'story.json'</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">response</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Success!"</span><span class="pun">,</span><span class="pln"> response</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">},</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">error</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Failed!"</span><span class="pun">,</span><span class="pln"> error</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>You can also use "catch":</p>
+
+<pre class="prettyprint"><span class="kwd">get</span><span class="pun">(</span><span class="str">'story.json'</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">response</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Success!"</span><span class="pun">,</span><span class="pln"> response</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">catch</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">error</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Failed!"</span><span class="pun">,</span><span class="pln"> error</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>There's nothing special about "catch", it's just sugar for <code>then(undefined, func)</code>, but it's more readable. Note that the two code examples above do not behave the same, the latter is equivalent to:</p>
+
+<pre class="prettyprint"><span class="kwd">get</span><span class="pun">(</span><span class="str">'story.json'</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">response</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Success!"</span><span class="pun">,</span><span class="pln"> response</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">undefined</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">error</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Failed!"</span><span class="pun">,</span><span class="pln"> error</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>The difference is subtle, but extremely useful. Promise rejections skip forward to the next "then" with a rejection callback (or "catch", since it's equivalent). With <code>then(func1, func2)</code>, <code>func1</code> or <code>func2</code> will be called, never both. But with <code>then(func1).catch(func2)</code>, both will be called if <code>func1</code> rejects, as they're separate steps in the chain. Take the following:</p>
+
+<pre class="prettyprint"><span class="pln">asyncThing1</span><span class="pun">().</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> asyncThing2</span><span class="pun">();</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> asyncThing3</span><span class="pun">();</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">catch</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">err</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> asyncRecovery1</span><span class="pun">();</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> asyncThing4</span><span class="pun">();</span><span class="pln">
+</span><span class="pun">},</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">err</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> asyncRecovery2</span><span class="pun">();</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">catch</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">err</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Don't worry about it"</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"All done!"</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>The flow above is very similar to normal JavaScript try/catch, errors that happen within a "try" go immediately to the "catch" block. Here's the above as a flowchart (because I love flowcharts):</p>
+
+<div style="max-width: 495px; margin: 10px auto">
+  <div style="position: relative; padding-top: 93%;">
+    <iframe style="position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden" src="./promises-catch,png_files/promise-flow.htm" frameborder="0" allowtransparency="true"></iframe>
+  </div>
+</div>
+
+<p>Follow the green lines for promises that fulfill, or the red for ones that reject.</p>
+
+<h3 id="toc-exceptions-and-promises">JavaScript exceptions and promises</h3>
+<p>Rejections happen when a promise is explicitly rejected, but also implicitly if an error is thrown in the constructor callback:</p>
+
+<pre class="prettyprint"><span class="kwd">var</span><span class="pln"> jsonPromise </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">Promise</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">resolve</span><span class="pun">,</span><span class="pln"> reject</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// JSON.parse throws an error if you feed it some</span><span class="pln">
+  </span><span class="com">// invalid JSON, so this implicitly rejects:</span><span class="pln">
+  resolve</span><span class="pun">(</span><span class="pln">JSON</span><span class="pun">.</span><span class="pln">parse</span><span class="pun">(</span><span class="str">"This ain't JSON"</span><span class="pun">));</span><span class="pln">
+</span><span class="pun">});</span><span class="pln">
+
+jsonPromise</span><span class="pun">.</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">data</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// This never happens:</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"It worked!"</span><span class="pun">,</span><span class="pln"> data</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">catch</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">err</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// Instead, this happens:</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"It failed!"</span><span class="pun">,</span><span class="pln"> err</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>This means it's useful to do all your promise-related work inside the promise constructor callback, so errors are automatically caught and become rejections.</p>
+<p>The same goes for errors thrown in "then" callbacks.</p>
+
+<pre class="prettyprint"><span class="kwd">get</span><span class="pun">(</span><span class="str">'/'</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="pln">JSON</span><span class="pun">.</span><span class="pln">parse</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// This never happens, '/' is an HTML page, not JSON</span><span class="pln">
+  </span><span class="com">// so JSON.parse throws</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"It worked!"</span><span class="pun">,</span><span class="pln"> data</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">catch</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">err</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// Instead, this happens:</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"It failed!"</span><span class="pun">,</span><span class="pln"> err</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<h3 id="toc-errors-in-practice">Error handling in practice</h3>
+
+<p>With our story and chapters, we can use catch to display an error to the user:</p>
+
+<pre class="prettyprint"><span class="pln">getJSON</span><span class="pun">(</span><span class="str">'story.json'</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">story</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> getJSON</span><span class="pun">(</span><span class="pln">story</span><span class="pun">.</span><span class="pln">chapterUrls</span><span class="pun">[</span><span class="lit">0</span><span class="pun">]);</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">chapter1</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  addHtmlToPage</span><span class="pun">(</span><span class="pln">chapter1</span><span class="pun">.</span><span class="pln">html</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">catch</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  addTextToPage</span><span class="pun">(</span><span class="str">"Failed to show chapter"</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  document</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'.spinner'</span><span class="pun">).</span><span class="pln">style</span><span class="pun">.</span><span class="pln">display </span><span class="pun">=</span><span class="pln"> </span><span class="str">'none'</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>If fetching <code>story.chapterUrls[0]</code> fails (eg http 500 or user is offline), it'll skip all following success callbacks, which includes the one in <code>getJSON</code> which tries to parse the response as JSON, and also skips the callback that adds chapter1.html to the page. Instead it moves onto the catch callback. As a result, "Failed to show chapter" will be added to the page if any of the previous actions failed.</p>
+<p>Like JavaScript's try/catch, the error is caught and subsequent code continues, so the spinner is always hidden, which is what we want. The above becomes a non-blocking async version of:</p>
+
+<pre class="prettyprint"><span class="kwd">try</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">var</span><span class="pln"> story </span><span class="pun">=</span><span class="pln"> getJSONSync</span><span class="pun">(</span><span class="str">'story.json'</span><span class="pun">);</span><span class="pln">
+  </span><span class="kwd">var</span><span class="pln"> chapter1 </span><span class="pun">=</span><span class="pln"> getJSONSync</span><span class="pun">(</span><span class="pln">story</span><span class="pun">.</span><span class="pln">chapterUrls</span><span class="pun">[</span><span class="lit">0</span><span class="pun">]);</span><span class="pln">
+  addHtmlToPage</span><span class="pun">(</span><span class="pln">chapter1</span><span class="pun">.</span><span class="pln">html</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="kwd">catch</span><span class="pln"> </span><span class="pun">(</span><span class="pln">e</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  addTextToPage</span><span class="pun">(</span><span class="str">"Failed to show chapter"</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+document</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'.spinner'</span><span class="pun">).</span><span class="pln">style</span><span class="pun">.</span><span class="pln">display </span><span class="pun">=</span><span class="pln"> </span><span class="str">'none'</span><span class="pun">;</span></pre>
+
+<p>You may want to "catch" simply for logging purposes, without recovering from the error. To do this, just rethrow the error. We could do this in our <code>getJSON</code> method:</p>
+
+<pre class="prettyprint"><span class="kwd">function</span><span class="pln"> getJSON</span><span class="pun">(</span><span class="pln">url</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> </span><span class="kwd">get</span><span class="pun">(</span><span class="pln">url</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="pln">JSON</span><span class="pun">.</span><span class="pln">parse</span><span class="pun">).</span><span class="kwd">catch</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">err</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"getJSON failed for"</span><span class="pun">,</span><span class="pln"> url</span><span class="pun">,</span><span class="pln"> err</span><span class="pun">);</span><span class="pln">
+    </span><span class="kwd">throw</span><span class="pln"> err</span><span class="pun">;</span><span class="pln">
+  </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">}</span></pre>
+
+<p>So we've managed to fetch one chapter, but we want them all. Let's make that happen.</p>
+
+<h2 id="toc-parallelism-sequencing">Parallelism and sequencing - Getting the best of both</h2>
+
+<p>Thinking async isn't easy. If you're struggling to get off the mark, try writing the code as if it were synchronous. In this case:</p>
+
+<pre class="prettyprint"><span class="kwd">try</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">var</span><span class="pln"> story </span><span class="pun">=</span><span class="pln"> getJSONSync</span><span class="pun">(</span><span class="str">'story.json'</span><span class="pun">);</span><span class="pln">
+  addHtmlToPage</span><span class="pun">(</span><span class="pln">story</span><span class="pun">.</span><span class="pln">heading</span><span class="pun">);</span><span class="pln">
+
+  story</span><span class="pun">.</span><span class="pln">chapterUrls</span><span class="pun">.</span><span class="pln">forEach</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">chapterUrl</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> chapter </span><span class="pun">=</span><span class="pln"> getJSONSync</span><span class="pun">(</span><span class="pln">chapterUrl</span><span class="pun">);</span><span class="pln">
+    addHtmlToPage</span><span class="pun">(</span><span class="pln">chapter</span><span class="pun">.</span><span class="pln">html</span><span class="pun">);</span><span class="pln">
+  </span><span class="pun">});</span><span class="pln">
+
+  addTextToPage</span><span class="pun">(</span><span class="str">"All done"</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="kwd">catch</span><span class="pln"> </span><span class="pun">(</span><span class="pln">err</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  addTextToPage</span><span class="pun">(</span><span class="str">"Argh, broken: "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> err</span><span class="pun">.</span><span class="pln">message</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+document</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'.spinner'</span><span class="pun">).</span><span class="pln">style</span><span class="pun">.</span><span class="pln">display </span><span class="pun">=</span><span class="pln"> </span><span class="str">'none'</span><span class="pun">;</span></pre>
+
+<p>That works (<a href="http://www.html5rocks.com/en/tutorials/es6/promises/sync-example.html">see example</a>)! But it's sync and locks up the browser while things download. To make this work async we use "then" to make things happen one after another.</p>
+
+<pre class="prettyprint"><span class="pln">getJSON</span><span class="pun">(</span><span class="str">'story.json'</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">story</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  addHtmlToPage</span><span class="pun">(</span><span class="pln">story</span><span class="pun">.</span><span class="pln">heading</span><span class="pun">);</span><span class="pln">
+
+  </span><span class="com">// TODO: for each url in story.chapterUrls, fetch &amp; display</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// And we're all done!</span><span class="pln">
+  addTextToPage</span><span class="pun">(</span><span class="str">"All done"</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">catch</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">err</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// Catch any error that happened along the way</span><span class="pln">
+  addTextToPage</span><span class="pun">(</span><span class="str">"Argh, broken: "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> err</span><span class="pun">.</span><span class="pln">message</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// Always hide the spinner</span><span class="pln">
+  document</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'.spinner'</span><span class="pun">).</span><span class="pln">style</span><span class="pun">.</span><span class="pln">display </span><span class="pun">=</span><span class="pln"> </span><span class="str">'none'</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>But how can we loop through the chapter urls and fetch them in order? This <strong>doesn't work</strong>:</p>
+
+<pre class="prettyprint"><span class="pln">story</span><span class="pun">.</span><span class="pln">chapterUrls</span><span class="pun">.</span><span class="pln">forEach</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">chapterUrl</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// Fetch chapter</span><span class="pln">
+  getJSON</span><span class="pun">(</span><span class="pln">chapterUrl</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">chapter</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="com">// and add it to the page</span><span class="pln">
+    addHtmlToPage</span><span class="pun">(</span><span class="pln">chapter</span><span class="pun">.</span><span class="pln">html</span><span class="pun">);</span><span class="pln">
+  </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>"forEach" isn't async-aware, so our chapters would appear in whatever order they download, which is basically how Pulp Fiction was written. This isn't Pulp Fiction, so let's fix it…</p>
+
+<h3 id="toc-creating-sequences">Creating a sequence</h3>
+<p>We want to turn our <code>chapterUrls</code> array into a sequence of promises. We can do that using "then":</p>
+
+<pre class="prettyprint"><span class="com">// Start off with a promise that always resolves</span><span class="pln">
+</span><span class="kwd">var</span><span class="pln"> sequence </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Promise</span><span class="pun">.</span><span class="pln">resolve</span><span class="pun">();</span><span class="pln">
+
+</span><span class="com">// Loop through our chapter urls</span><span class="pln">
+story</span><span class="pun">.</span><span class="pln">chapterUrls</span><span class="pun">.</span><span class="pln">forEach</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">chapterUrl</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// Add these actions to the end of the sequence</span><span class="pln">
+  sequence </span><span class="pun">=</span><span class="pln"> sequence</span><span class="pun">.</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">return</span><span class="pln"> getJSON</span><span class="pun">(</span><span class="pln">chapterUrl</span><span class="pun">);</span><span class="pln">
+  </span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">chapter</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    addHtmlToPage</span><span class="pun">(</span><span class="pln">chapter</span><span class="pun">.</span><span class="pln">html</span><span class="pun">);</span><span class="pln">
+  </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>This is the first time we've seen <code>Promise.resolve</code>, which creates a promise that resolves to whatever value you give it. If you pass it an instance of <code>Promise</code> it'll simply return it (<strong>note:</strong> this is a change to the spec that some implementations don't yet follow). If you pass it something promise-like (has a 'then' method), it creates a genuine <code>Promise</code> that fulfills/rejects in the same way. If you pass in any other value, eg <code>Promise.resolve('Hello')</code>, it creates a promise that fulfills with that value. If you call it with no value, as above, it fulfills with "undefined".</p>
+
+<p>There's also <code>Promise.reject(val)</code>, which creates a promise that rejects with the value you give it (or undefined).</p>
+<p>We can tidy up the above code using <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce">array.reduce</a></code>:</p>
+
+<pre class="prettyprint"><span class="com">// Loop through our chapter urls</span><span class="pln">
+story</span><span class="pun">.</span><span class="pln">chapterUrls</span><span class="pun">.</span><span class="pln">reduce</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">sequence</span><span class="pun">,</span><span class="pln"> chapterUrl</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// Add these actions to the end of the sequence</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> sequence</span><span class="pun">.</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">return</span><span class="pln"> getJSON</span><span class="pun">(</span><span class="pln">chapterUrl</span><span class="pun">);</span><span class="pln">
+  </span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">chapter</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    addHtmlToPage</span><span class="pun">(</span><span class="pln">chapter</span><span class="pun">.</span><span class="pln">html</span><span class="pun">);</span><span class="pln">
+  </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">},</span><span class="pln"> </span><span class="typ">Promise</span><span class="pun">.</span><span class="pln">resolve</span><span class="pun">());</span></pre>
+
+<p>This is doing the same as the previous example, but doesn't need the separate "sequence" variable. Our reduce callback is called for each item in the array. "sequence" is <code>Promise.resolve()</code> the first time around, but for the rest of the calls "sequence" is whatever we returned from the previous call. <code>array.reduce</code> is really useful for boiling an array down to a single value, which in this case is a promise.</p>
+<p>Let's put it all together…</p>
+
+<pre class="prettyprint"><span class="pln">getJSON</span><span class="pun">(</span><span class="str">'story.json'</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">story</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  addHtmlToPage</span><span class="pun">(</span><span class="pln">story</span><span class="pun">.</span><span class="pln">heading</span><span class="pun">);</span><span class="pln">
+
+  </span><span class="kwd">return</span><span class="pln"> story</span><span class="pun">.</span><span class="pln">chapterUrls</span><span class="pun">.</span><span class="pln">reduce</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">sequence</span><span class="pun">,</span><span class="pln"> chapterUrl</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="com">// Once the last chapter's promise is done…</span><span class="pln">
+    </span><span class="kwd">return</span><span class="pln"> sequence</span><span class="pun">.</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      </span><span class="com">// …fetch the next chapter</span><span class="pln">
+      </span><span class="kwd">return</span><span class="pln"> getJSON</span><span class="pun">(</span><span class="pln">chapterUrl</span><span class="pun">);</span><span class="pln">
+    </span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">chapter</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      </span><span class="com">// and add it to the page</span><span class="pln">
+      addHtmlToPage</span><span class="pun">(</span><span class="pln">chapter</span><span class="pun">.</span><span class="pln">html</span><span class="pun">);</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+  </span><span class="pun">},</span><span class="pln"> </span><span class="typ">Promise</span><span class="pun">.</span><span class="pln">resolve</span><span class="pun">());</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// And we're all done!</span><span class="pln">
+  addTextToPage</span><span class="pun">(</span><span class="str">"All done"</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">catch</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">err</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// Catch any error that happened along the way</span><span class="pln">
+  addTextToPage</span><span class="pun">(</span><span class="str">"Argh, broken: "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> err</span><span class="pun">.</span><span class="pln">message</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// Always hide the spinner</span><span class="pln">
+  document</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'.spinner'</span><span class="pun">).</span><span class="pln">style</span><span class="pun">.</span><span class="pln">display </span><span class="pun">=</span><span class="pln"> </span><span class="str">'none'</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>And there we have it (<a href="http://www.html5rocks.com/en/tutorials/es6/promises/async-example.html">see example</a>), a fully async version of the sync version. But we can do better. At the moment our page is downloading like this:</p>
+
+<figure>
+  <img src="./promises-catch,png_files/promise1.gif">
+</figure>
+
+<p>Browsers are pretty good at downloading multiple things at once, so we're losing performance by downloading chapters one after the other. What we want to do is download them all at the same time, then process them when they've all arrived. Thankfully there's an API for this:</p>
+
+<pre class="prettyprint"><span class="typ">Promise</span><span class="pun">.</span><span class="pln">all</span><span class="pun">(</span><span class="pln">arrayOfPromises</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">arrayOfResults</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">//...</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p><code>Promise.all</code> takes an array of promises and creates a promise that fulfills when all of them successfully complete. You get an array of results (whatever the promises fulfilled to) in the same order as the promises you passed in.</p>
+
+<pre class="prettyprint"><span class="pln">getJSON</span><span class="pun">(</span><span class="str">'story.json'</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">story</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  addHtmlToPage</span><span class="pun">(</span><span class="pln">story</span><span class="pun">.</span><span class="pln">heading</span><span class="pun">);</span><span class="pln">
+
+  </span><span class="com">// Take an array of promises and wait on them all</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> </span><span class="typ">Promise</span><span class="pun">.</span><span class="pln">all</span><span class="pun">(</span><span class="pln">
+    </span><span class="com">// Map our array of chapter urls to</span><span class="pln">
+    </span><span class="com">// an array of chapter json promises</span><span class="pln">
+    story</span><span class="pun">.</span><span class="pln">chapterUrls</span><span class="pun">.</span><span class="pln">map</span><span class="pun">(</span><span class="pln">getJSON</span><span class="pun">)</span><span class="pln">
+  </span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">chapters</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// Now we have the chapters jsons in order! Loop through…</span><span class="pln">
+  chapters</span><span class="pun">.</span><span class="pln">forEach</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">chapter</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="com">// …and add to the page</span><span class="pln">
+    addHtmlToPage</span><span class="pun">(</span><span class="pln">chapter</span><span class="pun">.</span><span class="pln">html</span><span class="pun">);</span><span class="pln">
+  </span><span class="pun">});</span><span class="pln">
+  addTextToPage</span><span class="pun">(</span><span class="str">"All done"</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">catch</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">err</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// catch any error that happened so far</span><span class="pln">
+  addTextToPage</span><span class="pun">(</span><span class="str">"Argh, broken: "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> err</span><span class="pun">.</span><span class="pln">message</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  document</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'.spinner'</span><span class="pun">).</span><span class="pln">style</span><span class="pun">.</span><span class="pln">display </span><span class="pun">=</span><span class="pln"> </span><span class="str">'none'</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>Depending on connection, this can be seconds faster than loading one-by-one (<a href="http://www.html5rocks.com/en/tutorials/es6/promises/async-all-example.html">see example</a>), and it's less code than our first try. The chapters can download in whatever order, but they appear on screen in the right order.</p>
+
+<figure>
+  <img src="./promises-catch,png_files/promise2.gif">
+</figure>
+
+<p>However, we can still improve perceived performance. When chapter one arrives we should add it to the page. This lets the user start reading before the rest of the chapters have arrived. When chapter three arrives, we wouldn't add it to the page because the user may not realise chapter two is missing. When chapter two arrives, we can add chapters two and three, etc etc.</p>
+<p>To do this, we fetch JSON for all our chapters at the same time, then create a sequence to add them to the document:</p>
+
+<pre class="prettyprint"><span class="pln">getJSON</span><span class="pun">(</span><span class="str">'story.json'</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">story</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  addHtmlToPage</span><span class="pun">(</span><span class="pln">story</span><span class="pun">.</span><span class="pln">heading</span><span class="pun">);</span><span class="pln">
+
+  </span><span class="com">// Map our array of chapter urls to</span><span class="pln">
+  </span><span class="com">// an array of chapter json promises.</span><span class="pln">
+  </span><span class="com">// This makes sure they all download parallel.</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> story</span><span class="pun">.</span><span class="pln">chapterUrls</span><span class="pun">.</span><span class="pln">map</span><span class="pun">(</span><span class="pln">getJSON</span><span class="pun">)</span><span class="pln">
+    </span><span class="pun">.</span><span class="pln">reduce</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">sequence</span><span class="pun">,</span><span class="pln"> chapterPromise</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      </span><span class="com">// Use reduce to chain the promises together,</span><span class="pln">
+      </span><span class="com">// adding content to the page for each chapter</span><span class="pln">
+      </span><span class="kwd">return</span><span class="pln"> sequence</span><span class="pun">.</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="com">// Wait for everything in the sequence so far,</span><span class="pln">
+        </span><span class="com">// then wait for this chapter to arrive.</span><span class="pln">
+        </span><span class="kwd">return</span><span class="pln"> chapterPromise</span><span class="pun">;</span><span class="pln">
+      </span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">chapter</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        addHtmlToPage</span><span class="pun">(</span><span class="pln">chapter</span><span class="pun">.</span><span class="pln">html</span><span class="pun">);</span><span class="pln">
+      </span><span class="pun">});</span><span class="pln">
+    </span><span class="pun">},</span><span class="pln"> </span><span class="typ">Promise</span><span class="pun">.</span><span class="pln">resolve</span><span class="pun">());</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  addTextToPage</span><span class="pun">(</span><span class="str">"All done"</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">catch</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">err</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="com">// catch any error that happened along the way</span><span class="pln">
+  addTextToPage</span><span class="pun">(</span><span class="str">"Argh, broken: "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> err</span><span class="pun">.</span><span class="pln">message</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}).</span><span class="kwd">then</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  document</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'.spinner'</span><span class="pun">).</span><span class="pln">style</span><span class="pun">.</span><span class="pln">display </span><span class="pun">=</span><span class="pln"> </span><span class="str">'none'</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>And there we go (<a href="http://www.html5rocks.com/en/tutorials/es6/promises/async-best-example.html">see example</a>), the best of both! It takes the same amount of time to deliver all the content, but the user gets the first bit of content sooner.</p>
+
+<figure>
+  <img src="./promises-catch,png_files/promise3.gif">
+</figure>
+
+<p>In this trivial example, all of the chapters arrive around the same time, but the benefit of displaying one at a time will be exaggerated with more, larger chapters.</p>
+
+<p>Doing the above with <a href="https://gist.github.com/jakearchibald/0e652d95c07442f205ce">Node.js-style callbacks or events</a> is around double the code, but more importantly isn't as easy to follow. However, this isn't the end of the story for promises, when combined with other ES6 features they get even easier…</p>
+
+<h2 class="toc-generators">Bonus round: Promises and Generators</h2>
+
+<p>This next bit involves a whole bunch of new ES6 features, but it's not something you need to understand to use promises in your code today. Treat it like a movie trailer for some upcoming blockbuster features.</p>
+<p>ES6 also gives us <a href="http://wiki.ecmascript.org/doku.php?id=harmony:generators">generators</a>, which allow functions to exit at a particular point, like "return", but later resume from the same point and state. Eg:</p>
+
+<pre class="prettyprint"><span class="kwd">function</span><span class="pln"> </span><span class="pun">*</span><span class="pln">addGenerator</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">var</span><span class="pln"> i </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">while</span><span class="pln"> </span><span class="pun">(</span><span class="kwd">true</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    i </span><span class="pun">+=</span><span class="pln"> </span><span class="kwd">yield</span><span class="pln"> i</span><span class="pun">;</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span></pre>
+
+<p>Notice the star before the function name, this makes it a generator. The yield keyword is our return/resume point. We can use it like this:</p>
+
+<pre class="prettyprint"><span class="kwd">var</span><span class="pln"> adder </span><span class="pun">=</span><span class="pln"> addGenerator</span><span class="pun">();</span><span class="pln">
+adder</span><span class="pun">.</span><span class="kwd">next</span><span class="pun">().</span><span class="pln">value</span><span class="pun">;</span><span class="pln"> </span><span class="com">// 0</span><span class="pln">
+adder</span><span class="pun">.</span><span class="kwd">next</span><span class="pun">(</span><span class="lit">5</span><span class="pun">).</span><span class="pln">value</span><span class="pun">;</span><span class="pln"> </span><span class="com">// 5</span><span class="pln">
+adder</span><span class="pun">.</span><span class="kwd">next</span><span class="pun">(</span><span class="lit">5</span><span class="pun">).</span><span class="pln">value</span><span class="pun">;</span><span class="pln"> </span><span class="com">// 10</span><span class="pln">
+adder</span><span class="pun">.</span><span class="kwd">next</span><span class="pun">(</span><span class="lit">5</span><span class="pun">).</span><span class="pln">value</span><span class="pun">;</span><span class="pln"> </span><span class="com">// 15</span><span class="pln">
+adder</span><span class="pun">.</span><span class="kwd">next</span><span class="pun">(</span><span class="lit">50</span><span class="pun">).</span><span class="pln">value</span><span class="pun">;</span><span class="pln"> </span><span class="com">// 65</span></pre>
+
+<p>But what does this mean for promises? Well, you can use this return/resume behaviour to write async code that looks (and is as easy to follow as) synchronous code. Don't worry too much about understanding it line-for-line, but here's a helper function that lets us use 'yield' to wait for promises to settle:</p>
+
+<pre class="prettyprint"><span class="kwd">function</span><span class="pln"> spawn</span><span class="pun">(</span><span class="pln">generatorFunc</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">function</span><span class="pln"> continuer</span><span class="pun">(</span><span class="pln">verb</span><span class="pun">,</span><span class="pln"> arg</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> result</span><span class="pun">;</span><span class="pln">
+    </span><span class="kwd">try</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      result </span><span class="pun">=</span><span class="pln"> generator</span><span class="pun">[</span><span class="pln">verb</span><span class="pun">](</span><span class="pln">arg</span><span class="pun">);</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln"> </span><span class="kwd">catch</span><span class="pln"> </span><span class="pun">(</span><span class="pln">err</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      </span><span class="kwd">return</span><span class="pln"> </span><span class="typ">Promise</span><span class="pun">.</span><span class="pln">reject</span><span class="pun">(</span><span class="pln">err</span><span class="pun">);</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+    </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">result</span><span class="pun">.</span><span class="kwd">done</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      </span><span class="kwd">return</span><span class="pln"> result</span><span class="pun">.</span><span class="pln">value</span><span class="pun">;</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln"> </span><span class="kwd">else</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      </span><span class="kwd">return</span><span class="pln"> </span><span class="typ">Promise</span><span class="pun">.</span><span class="pln">resolve</span><span class="pun">(</span><span class="pln">result</span><span class="pun">.</span><span class="pln">value</span><span class="pun">).</span><span class="kwd">then</span><span class="pun">(</span><span class="pln">onFulfilled</span><span class="pun">,</span><span class="pln"> onRejected</span><span class="pun">);</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+  </span><span class="kwd">var</span><span class="pln"> generator </span><span class="pun">=</span><span class="pln"> generatorFunc</span><span class="pun">();</span><span class="pln">
+  </span><span class="kwd">var</span><span class="pln"> onFulfilled </span><span class="pun">=</span><span class="pln"> continuer</span><span class="pun">.</span><span class="pln">bind</span><span class="pun">(</span><span class="pln">continuer</span><span class="pun">,</span><span class="pln"> </span><span class="str">"next"</span><span class="pun">);</span><span class="pln">
+  </span><span class="kwd">var</span><span class="pln"> onRejected </span><span class="pun">=</span><span class="pln"> continuer</span><span class="pun">.</span><span class="pln">bind</span><span class="pun">(</span><span class="pln">continuer</span><span class="pun">,</span><span class="pln"> </span><span class="str">"throw"</span><span class="pun">);</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> onFulfilled</span><span class="pun">();</span><span class="pln">
+</span><span class="pun">}</span></pre>
+
+<p>…which I pretty much <a href="https://github.com/kriskowal/q/blob/db9220d714b16b96a05e9a037fa44ce581715e41/q.js#L500">lifted verbatim from Q</a>, but adapted for JavaScript promises. With this, we can take our final best-case chapter example, mix it with a load of new ES6 goodness, and turn it into:</p>
+
+<pre class="prettyprint"><span class="pln">spawn</span><span class="pun">(</span><span class="kwd">function</span><span class="pln"> </span><span class="pun">*()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">try</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="com">// 'yield' effectively does an async wait,</span><span class="pln">
+    </span><span class="com">// returning the result of the promise</span><span class="pln">
+    let story </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">yield</span><span class="pln"> getJSON</span><span class="pun">(</span><span class="str">'story.json'</span><span class="pun">);</span><span class="pln">
+    addHtmlToPage</span><span class="pun">(</span><span class="pln">story</span><span class="pun">.</span><span class="pln">heading</span><span class="pun">);</span><span class="pln">
+
+    </span><span class="com">// Map our array of chapter urls to</span><span class="pln">
+    </span><span class="com">// an array of chapter json promises.</span><span class="pln">
+    </span><span class="com">// This makes sure they all download parallel.</span><span class="pln">
+    let chapterPromises </span><span class="pun">=</span><span class="pln"> story</span><span class="pun">.</span><span class="pln">chapterUrls</span><span class="pun">.</span><span class="pln">map</span><span class="pun">(</span><span class="pln">getJSON</span><span class="pun">);</span><span class="pln">
+
+    </span><span class="kwd">for</span><span class="pln"> </span><span class="pun">(</span><span class="pln">let chapterPromise of chapterPromises</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      </span><span class="com">// Wait for each chapter to be ready, then add it to the page</span><span class="pln">
+      let chapter </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">yield</span><span class="pln"> chapterPromise</span><span class="pun">;</span><span class="pln">
+      addHtmlToPage</span><span class="pun">(</span><span class="pln">chapter</span><span class="pun">.</span><span class="pln">html</span><span class="pun">);</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+
+    addTextToPage</span><span class="pun">(</span><span class="str">"All done"</span><span class="pun">);</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+  </span><span class="kwd">catch</span><span class="pln"> </span><span class="pun">(</span><span class="pln">err</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="com">// try/catch just works, rejected promises are thrown here</span><span class="pln">
+    addTextToPage</span><span class="pun">(</span><span class="str">"Argh, broken: "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> err</span><span class="pun">.</span><span class="pln">message</span><span class="pun">);</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+  document</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">'.spinner'</span><span class="pun">).</span><span class="pln">style</span><span class="pun">.</span><span class="pln">display </span><span class="pun">=</span><span class="pln"> </span><span class="str">'none'</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>This works exactly as before, but so much easier to read. This works in Chrome and Opera today (<a href="http://www.html5rocks.com/en/tutorials/es6/promises/async-generators-example.html">see example</a>), but first you need to go to <strong>about:flags</strong> and turn on <strong>Enable experimental JavaScript</strong>.</p>
+
+<p>This throws together a lot of new ES6 stuff: promises, generators, let, for-of. When we yield a promise, the spawn helper waits for the promise to resolve and returns the final value. If the promise rejects, spawn causes our yield statement to throw an exception, which we can catch with normal JavaScript try/catch. Amazingly simple async coding!</p>
+
+<p>This pattern is so useful, it's coming to ES7 in the form of <a href="http://jakearchibald.com/2014/es7-async-functions/">async functions</a>. It's pretty much the same as above, but no need for a <code>spawn</code> method.</p>
+
+<h2 id="toc-api">Promise API Reference</h2>
+
+<p>All methods work in Chrome, Opera and in Firefox Nightly unless otherwise noted. <a href="https://github.com/jakearchibald/ES6-Promises#readme">The polyfill</a> provides the below for all browers.</p>
+
+<h3>Static Methods</h3>
+<dl>
+  <dt><code>Promise.resolve(promise);</code></dt>
+  <dd>Returns promise (only if <code>promise.constructor == Promise</code>)
+  </dd><dt><code>Promise.resolve(thenable);</code></dt>
+  <dd>Make a new promise from the thenable. A thenable is promise-like in as far as it has a "then" method.
+  </dd>
+  <dt><code>Promise.resolve(obj);</code></dt>
+  <dd>Make a promise that fulfills to <code>obj</code>. in this situation.</dd>
+  <dt><code>Promise.reject(obj);</code></dt>
+  <dd>Make a promise that rejects to <code>obj</code>. For consistency and debugging (e.g. stack traces), <code>obj</code> should be an <code>instanceof Error</code>.</dd>
+  <dt><code>Promise.all(array);</code></dt>
+  <dd>Make a promise that fulfills when every item in the array fulfills, and rejects if (and when) any item rejects. Each array item is passed to <code>Promise.resolve</code>, so the array can be a mixture of promise-like objects and other objects. The fulfillment value is an array (in order) of fulfillment values. The rejection value is the first rejection value.
+  </dd><dt><code>Promise.race(array);</code></dt>
+  <dd>Make a Promise that fulfills as soon as any item fulfills, or rejects as soon as any item rejects, whichever happens first.
+  <p class="notice"><b>Note:</b> I'm unconvinced of <code>Promise.race</code>'s usefulness; I'd rather have an opposite of <code>Promise.all</code> that only rejects if all items reject.</p></dd>
+</dl>
+
+<h3>Constructor</h3>
+<pre class="prettyprint"><span class="kwd">new</span><span class="pln"> </span><span class="typ">Promise</span><span class="pun">(</span><span class="kwd">function</span><span class="pun">(</span><span class="pln">resolve</span><span class="pun">,</span><span class="pln"> reject</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{});</span></pre>
+<dl>
+  <dt><code>resolve(thenable)</code></dt>
+  <dd>Your promise will be fulfilled/rejected with the outcome of <code>thenable</code></dd>
+  <dt><code>resolve(obj)</code></dt>
+  <dd>Your promise is fulfilled with <code>obj</code></dd>
+  <dt><code>reject(obj)</code></dt>
+  <dd>Your promise is rejected with <code>obj</code>. For consistency and debugging (eg stack traces), obj should be an <code>instanceof Error</code>. Any errors thrown in the constructor callback will be implicitly passed to <code>reject()</code>.</dd>
+</dl>
+
+<h3>Instance Methods</h3>
+<dl>
+  <dt><code>promise.then(onFulfilled, onRejected)</code></dt>
+  <dd><code>onFulfilled</code> is called when/if "promise" resolves.
+  <code>onRejected</code> is called when/if "promise" rejects.
+  Both are optional, if either/both are omitted the next <code>onFulfilled</code>/<code>onRejected</code> in the chain is called.
+  Both callbacks have a single parameter, the fulfillment value or rejection reason.
+  "then" returns a new promise equivalent to the value you return from <code>onFulfilled</code>/<code>onRejected</code> after being passed through <code>Promise.resolve</code>. If an error is thrown in the callback, the returned promise rejects with that error.</dd>
+  <dt><code>promise.catch(onRejected)</code></dt>
+  <dd>Sugar for <code>promise.then(undefined, onRejected)</code></dd>
+</dl>
+
+<p>Many thanks to Anne van Kesteren, Domenic Denicola, Tom Ashworth, Remy Sharp, Addy Osmani, Arthur Evans, and Yutaka Hirano who proofread this and made corrections/recommendations.</p>
+
+<p>Also, thanks to <a href="http://mathiasbynens.be/">Mathias Bynens</a> for <a href="https://github.com/html5rocks/www.html5rocks.com/pull/921/files">updating various parts</a> of the article.</p>
+
+<script src="./promises-catch,png_files/promise-2.0.4.min.js"></script>
+<script>
+  function get(url) {
+    // Return a new promise.
+    // We do all the work within the constructor callback, so we can return here
+    return new Promise(function(resolve, reject) {
+      // Do the usual XHR stuff
+      var req = new XMLHttpRequest();
+      req.open('GET', url);
+
+      req.onload = function() {
+        // This is called even on 404 etc
+        // so check the status
+        if (req.status == 200) {
+          // Resolve the promise with the response text
+          resolve(req.response);
+        }
+        else {
+          // Otherwise reject with the status text
+          // which will hopefully be a meaningful error
+          reject(Error(req.statusText));
+        }
+      };
+
+      // Handle network errors
+      req.onerror = function() {
+        reject(Error("Network Error"));
+      };
+
+      // Make the request
+      req.send();
+    });
+  }
+
+  Array.prototype.slice.call(document.querySelectorAll('.live-example')).forEach(function(el) {
+    el.style.display = "inline";
+  });
+
+  document.querySelector('.get-example a').addEventListener('click', function(event) {
+    get(this.href).then(
+      console.log.bind(console, "Success!"),
+      console.error.bind(console, "Failure!")
+    );
+    event.preventDefault();
+  });
+
+  document.querySelector('.json-example a').addEventListener('click', function(event) {
+    get(this.href).then(JSON.parse).then(
+      console.log.bind(console, "Success!"),
+      console.error.bind(console, "Failure!")
+    );
+    event.preventDefault();
+  });
+</script>
+
+
+      </div>
+    </section>
+  </article>
+
+  
+  <section class="disqus pattern-bg-lighter">
+
+    <div id="disqus" class="container">
+
+      <h2>Comments</h2>
+
+      <div id="disqus_thread">
+
+        <a href="http://www.html5rocks.com/en/tutorials/es6/promises/#disqus_thread" class="load-comments" data-disqus-identifier="http://www.html5rocks.com/tutorials/es6/promises/">138</a>
+
+      </div>
+    </div>
+
+    <noscript>
+      &lt;p class="center"&gt;
+        &lt;strong&gt;
+          &lt;a href="http://disqus.com/?ref_noscript"&gt;Please enable JavaScript to view the comments powered by Disqus.&lt;/a&gt;
+        &lt;/strong&gt;
+      &lt;/p&gt;
+    </noscript>
+
+    <script>
+
+      var disqus_shortname = 'html5rocks';
+      var disqus_identifier = 'http://www.html5rocks.com/tutorials/es6/promises/';
+      var disqus_url = 'http://www.html5rocks.com/tutorials/es6/promises/';
+      var disqus_developer = 0;
+
+      var disqus_config = function () {
+        var funky_language_code_mapping = {
+          'de': 'de_inf',
+          'es': 'es_ES',
+          'pt': 'pt_EU',
+          'sr': 'sr_CYRL',
+          'sv': 'sv_SE',
+          'zh': 'zh_HANT'
+        };
+        this.language = funky_language_code_mapping['en'] ||
+                        'en';
+
+        this.callbacks.onReady = [ function () {
+                                      try {
+                                        ga('send', 'event', 'View comments');
+                                      } catch(err){}
+                                   } ];
+        this.callbacks.onNewComment = [ function (comment) {
+                                          try {
+                                            ga('send', 'event', 'Commented');
+                                          } catch(err){}
+                                        } ];
+      };
+
+      window.addEventListener('load', function(e) {
+
+        var c = document.createElement('script');
+        c.type = 'text/javascript';
+        c.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+        c.async = true;
+
+        var s = document.getElementsByTagName('script')[0], sp = s.parentNode;
+        sp.insertBefore(c, s);
+
+        if (window.location.hash === '#disqus_thread')
+          loadComments();
+
+      }, false);
+
+      var disqus_loaded = false;
+      function loadComments() {
+
+        if (disqus_loaded)
+          return;
+
+        disqus_loaded = true;
+
+        ga('send', 'event', 'Interactions', 'Comments', 'Comments Loaded');
+
+        var s = document.getElementsByTagName('script')[0], sp = s.parentNode;
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+
+        var disqusContainer = document.getElementById('disqus');
+        disqusContainer.classList.add('active');
+
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        sp.insertBefore(dsq, s);
+      }
+
+      function outgoing(url) {
+        try {
+          ga('send', 'event', 'Outbound Links' , url);
+        } catch(err){}
+      }
+      // Open external links (also that don't have a target defined) in a new tab.
+      var externLinks = document.querySelectorAll('article.tutorial a[href^="http"]:not([target])');
+      for(var i = 0, a; a = externLinks[i]; ++i) {
+        a.target = '_blank';
+        a.addEventListener('click', new Function('outgoing(' + '"' + a.href.replace(/.*?:\/\//g, "") + '"' + ');'));
+      }
+
+      var loadCommentsButtons = document.querySelectorAll('.load-comments');
+      for(var l = 0; l < loadCommentsButtons.length; l++)
+        loadCommentsButtons[l].addEventListener('click', loadComments);
+
+    </script>
+  </section>
+  
+
+  <footer>
+    <div class="container">
+
+      
+        <h1>Next steps</h1>
+
+        
+
+        <aside class="panel share">
+          <h2>Share</h2>
+
+            <a href="https://twitter.com/share?url=http://www.html5rocks.com/tutorials/es6/promises/&text=JavaScript%20Promises&lang=en&via=ChromiumDev&related=ChromiumDev" class="twitter" target="_blank">Twitter</a>
+
+            <a href="https://www.facebook.com/sharer/sharer.php?u=http://www.html5rocks.com/tutorials/es6/promises/" class="facebook" target="_blank">Facebook</a>
+
+            <a href="https://plus.google.com/share?url=http://www.html5rocks.com/tutorials/es6/promises/" class="gplus" onclick="javascript:window.open(this.href, &#39;&#39;, &#39;menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600&#39;);return false;">Google+</a>
+
+        </aside>
+
+        <aside class="panel rss">
+          <h2>Subscribe</h2>
+          <p>Enjoyed this article? Grab the <a href="http://feeds.feedburner.com/html5rocks">RSS feed</a> and stay up-to-date.</p>
+        </aside>
+
+      
+
+      <p class="licensing">
+      
+        Except as otherwise <a href="http://code.google.com/policies.html#restrictions">noted</a>, the content of this page is licensed under the <a href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 License</a>, and code samples are licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache 2.0 License</a>.
+      
+      </p>
+
+    </div>
+  </footer>
+
+  <script>
+    window.isCompatible = function() {
+      
+      return null;
+      
+    };
+
+    if (isCompatible() === false) {
+      document.getElementById('notcompatible').className = '';
+    }
+
+    function _prettyPrint() {
+      if (typeof customPrettyPrintLanguage != 'undefined') {
+        customPrettyPrintLanguage();
+      }
+      prettyPrint();
+    }
+  </script>
+  <script async="" src="./promises-catch,png_files/prettify.min.js" onload="_prettyPrint()"></script>
+  <!-- Google Tag Manager -->
+<noscript>&lt;iframe src="//www.googletagmanager.com/ns.html?id=GTM-XXXX"
+height="0" width="0" style="display:none;visibility:hidden"&gt;&lt;/iframe&gt;</noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MB3LRF');</script>
+<!-- End Google Tag Manager -->
+
+
+  </div>
+
+  <script>
+  (function() {
+
+    // Kill feedburner and marketing tracking arguments, but let them register
+    // before we do it.
+    setTimeout(function() {
+      if (/^\?utm_/.test(document.location.search) &&
+          window.history.replaceState) {
+        window.history.replaceState(
+            {}, '', document.location.href.replace(/\?utm_.*/, ''));
+      }
+    }, 2000);
+
+    var siteHeader = document.getElementById('siteheader');
+    var navToggle = document.getElementById('navtoggle');
+    var siteNav = document.getElementById('sitenav');
+
+    function toggle(target, forceActive) {
+
+      if (typeof toc !== 'undefined') {
+        // Switch off whichever one is not the
+        // current target
+        if (target === toc)
+          siteNav.classList.remove('active');
+        else
+          toc.classList.remove('active');
+      }
+
+      // Toggle if no force parameter is set
+      if (typeof forceActive === 'undefined') {
+        target.classList.toggle('active');
+      } else {
+        if (forceActive)
+          target.classList.add('active');
+        else
+          target.classList.remove('active');
+      }
+
+      // now find out what the set state ended up being
+      var isActive = target.classList.contains('active');
+
+      if (isActive)
+        siteHeader.classList.add('expanded');
+      else
+        siteHeader.classList.remove('expanded');
+
+    }
+
+    navToggle.addEventListener('click', function(e) {
+      toggle(siteNav);
+      e.preventDefault();
+    });
+
+    
+
+    var tocToggle = document.getElementById('toctoggle');
+    var toc = document.getElementById('toc');
+    var articleMeta = document.getElementById('article-meta');
+    var articleContent = document.getElementById('article-content');
+    var articleMetaHeight = 0;
+    var articleMetaMaxY = 0;
+    var articleMetaMinY = 0;
+    var articleContentPadding = 200;
+
+    var tocLinks = document.querySelectorAll('.toc a');
+    for (var t = 0; t < tocLinks.length; t++)
+      tocLinks[t].addEventListener('click', onTocLinkClick);
+
+    tocToggle.addEventListener('click', function(e) {
+      toggle(toc);
+      e.preventDefault();
+    });
+
+    toc.addEventListener('click', function(e) {
+      if (e.target !== siteNav)
+        toggle(toc, false);
+    });
+
+    function onTocLinkClick() {
+      ga('send', 'event', 'Interactions', 'TOC', 'TOC Clicked');
+    }
+
+    function setMinScrollYFromMetaY() {
+      var scrollPosition = window.scrollY;
+
+      var articleMetaBounds = articleMeta.getBoundingClientRect();
+      var articleMetaTop = Math.max(352,
+          articleMetaBounds.top - 20 + scrollPosition);
+
+      articleMetaHeight = articleMetaBounds.bottom - articleMetaBounds.top;
+      articleMetaMinY = articleMetaTop;
+    }
+
+    function setMaxScrollYFromContentHeight() {
+
+      var scrollPosition = window.scrollY;
+
+      var articleContentBounds = articleContent.getBoundingClientRect();
+      var articleContentTop = articleContentBounds.top + scrollPosition;
+      var articleContentHeight = articleContentBounds.bottom - articleContentBounds.top;
+
+      articleMetaMaxY = articleContentTop +
+          articleContentHeight -
+          articleMetaHeight -
+          articleContentPadding;
+
+    }
+
+    function onScroll(e) {
+
+      if (window.scrollY >= articleMetaMinY) {
+
+        articleMeta.classList.add('sticky');
+
+        var articleMetaTop = 22 - Math.max(0, window.scrollY - articleMetaMaxY);
+        articleMeta.style.top = articleMetaTop + 'px';
+
+      } else {
+        articleMeta.classList.remove('sticky');
+        articleMeta.style.top = 'auto';
+      }
+    }
+
+    if (articleMeta.getBoundingClientRect) {
+      setMinScrollYFromMetaY();
+      setMaxScrollYFromContentHeight();
+      document.addEventListener('scroll', onScroll);
+      window.addEventListener('load', setMaxScrollYFromContentHeight, false);
+    }
+
+    
+  })();
+  </script>
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-15028909-1', 'auto');
+  ga('create', 'UA-49880327-4', 'auto', {'name': 'html5rocks'});
+
+  ga('send', 'pageview');
+  ga('html5rocks.send', 'pageview');
+
+  </script>
+   <!-- Google Tag Manager -->
+<noscript>&lt;iframe src="//www.googletagmanager.com/ns.html?id=GTM-XXXX"
+height="0" width="0" style="display:none;visibility:hidden"&gt;&lt;/iframe&gt;</noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MB3LRF');</script>
+<!-- End Google Tag Manager -->
+
+
+</body></html>

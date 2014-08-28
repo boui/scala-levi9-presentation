@@ -454,14 +454,15 @@ func main() {
     </section>
     <section>
         <h2>Channels</h2>
-        <h4>Goroutines can be sending each other messages</h4>
-        <h4>Channels send/receive is synchronous</h4>
-        <h4>But channel can be buffered, and it becomes more like mailbox in actor</h4>
-        <h4>Chanels are also able to be multiplexed, chained and much more</h4>
+        <h4 class="fragment">Goroutines can be sending each other messages</h4>
+        <h4 class="fragment">Channels send/receive is synchronous</h4>
+        <h4 class="fragment">But channel can be buffered, and it becomes more like mailbox in actor</h4>
+        <h4 class="fragment">Channels are also able to be multiplexed, chained and much more</h4>
+        <h4 class="fragment">Don't communicate by sharing memory, share memory by communicating.</h4>
     </section>
     <section>
-        <h3>Lets check out how easy is this thing to use</h3>
-        nicest examples ever
+        <h3>Beautiful channels use</h3>
+        <a href="http://talks.golang.org/2012/concurrency.slide#25">slides</a>
     </section>
 </section>
 <section>
@@ -478,13 +479,7 @@ func main() {
     <section>
         <h4 class="fragment">Basially how the flow really works</h4>
         <img src="img/event-loop.png"/>
-        <pre class="fragment">
-        <code class="javascript">
- while(queue.waitForMessage()){
-  queue.processNextMessage();
-}
-        </code>
-        </pre>
+        <h4>Beautiful single threaded multiprocessing</h4>
     </section>
     <section>
         <h3>Do you remember me saying javascript is single threaded?</h3>
@@ -511,6 +506,10 @@ func main() {
         <h4 class="fragment">Lambda</h4>
     </section>
     <section>
+        <h2>Actors, Scala</h2>
+        <img src="img/actor.png" height="500px"/>
+    </section>
+    <section>
         <h2>Concept details</h2>
         <h4 class="fragment"> Actors can be used to control complex asynchronous flows</h4>
         <h4 class="fragment"> Actor is single threaded, and only serves one message at a time</h4>
@@ -519,11 +518,15 @@ func main() {
         <h4 class="fragment"> If it did crash - restart</h4>
     </section>
     <section>
-        <h2>Scala Actor best use</h2>
-        <h4 class="fragment"> Actors are good if you need to isolate some state, even mutable </h4>
-        <h4 class="fragment"> Actors are good for distributed systems </h4>
+        <h2>Concept details</h2>
+        <img src="img/actor_lifecycle1.png" height="600px" />
+    </section>
+    <section>
+        <h2>Scala Actor environment</h2>
         <h4 class="fragment"> Actors can produce actors hierarchies </h4>
         <h4 class="fragment"> Who watches the watchmen? </h4>
+        <h4 class="fragment"> Actors are good if you need to isolate some state, even mutable </h4>
+        <h4 class="fragment"> Actors are good for distributed systems </h4>
     </section>
     <section>
         <h2>Scala Implementation</h2>
@@ -531,28 +534,102 @@ func main() {
         <h4 class="fragment"> Hash map of actors id to actor object</h4>
         <h4 class="fragment"> Applying actor lambda to message is what executed in threads</h4>
     </section>
-</section>
-<section>
     <section>
+        <img src="img/actor-sys.png"/>
     </section>
     <section>
-        Continuation passing style
-    </section>
-    <section>
-        <h2> Futures </h2>
-        <h4 class="fragment"> Future is a function executed in another thread which results with result</h4>
-        <h4 class="fragment"> result may be either success or an error </h4>
-        <h4 class="fragment"> Success means future return a value, error - exception occurred or business logic failed </h4>
-    </section>
-    <section>
-        <h2> Promises </h2>
-        <h4 class="fragment"> Are a way future acknowledge each other about results </h4>
-        <h4 class="fragment"> Futures can subscribe to promises to be executed one by one </h4>
-        <h4 class="fragment"> Within promises futures can be explicitly controlled </h4>
+        <h1>Conclusion</h1>
+        <h4 class="fragment"> Actors are easy to use abstraction</h4>
+        <h4 class="fragment"> Actors are good for distributed systems with Remote Actors</h4>
+        <h4 class="fragment"> Actors system should be working on separate pool</h4>
+        <h4 class="fragment"> Actors should not block</h4>
+        <h4 class="fragment"> Actor are cheap to create</h4>
+        <h4 class="fragment"> Actors are going to be in a demo</h4>
+        <h4 class="fragment"> Beautiful FSM</h4>
     </section>
 </section>
 <section>
-    <h2>Agent</h2>
+    <section>
+        <h1>One beautiful abstraction</h1>
+    </section>
+    <section>
+        <h1>Problem: Callback hell</h1>
+        <h4>Reason:Continuation passing style</h4>
+        <pre>
+            <code class="javascript">
+function getPhoto(tag, handlerCallback) {
+    asyncGet(requestTag(tag), function(photoList) {
+        asyncGet(requestOneFrom(photoList), function(photoSizes) {
+            handlerCallback(sizesToPhoto(photoSizes));
+            //this can go on..
+        });
+    });
+}
+getPhoto('tokyo', drawOnScreen);
+            </code>
+        </pre>
+    </section>
+    <section>
+        <h2> Future </h2>
+        <h4 class="fragment"> Value that is going to be fulfilled sometime in a future</h4>
+        <h4 class="fragment"> It may be fulfilled or result with an error </h4>
+        <h4 class="fragment"> Futures are monadic </h4>
+    </section>
+    <section>
+        <h2> Promise </h2>
+        <img class="fragment" src="img/promise.png"/>
+    </section>
+    <section>
+        <h1>Patterns</h1>
+    </section>
+    <section>
+        <h4>Chain</h4>
+        <pre>
+            <code class="javascript">
+get('story.json').then(function(response) {
+    return JSON.parse(response);
+}).then(function(response) {
+    console.log("Yey JSON!", response);
+});
+        </code>
+        </pre>
+     </section>
+     <section>
+        <h4>Catch</h4>
+    <div style="float:left"><pre>
+        <code class="javascript" style="font-size: 20px; width:500px">
+asyncThing1().then(function() {
+    return asyncThing2();
+}).then(function() {
+    return asyncThing3();
+}).catch(function(err) {
+    return asyncRecovery1();
+}).then(function() {
+    return asyncThing4();
+}, function(err) {
+    return asyncRecovery2();
+}).catch(function(err) {
+    console.log("Don't worry about it");
+}).then(function() {
+    console.log("All done!");
+});
+        </code>
+    </pre>
+    </div>
+         <div style="float:left">
+        <img src="img/promises-catch.png" height="300px"/>
+             </div>
+    </section>
+    <section>
+        <h1>Join all, Race</h1>
+    </section>
+</section>
+<section>
+    <h1>Summary</h1>
+    <h2 class="fragment">Concurrency can be controlled with different abstractions</h2>
+    <h2 class="fragment">Async Messaging, CPS, Events+Event loop, Green threads</h2>
+    <h2 class="fragment">Concurrency is a way to controll parallelism and structuring model</h2>
+    <h2 class="fragment">Whats next? - Reactive design</h2>
 </section>
 <section>
     <h2>Demo</h2>
