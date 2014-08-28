@@ -499,19 +499,27 @@ func main() {
 </section>
 <section>
     <section>
-        <h2> Actor</h2>
-        <h4> Actors are based on green threads.</h4>
-        <h4> What makes thing an actor:</h4>
-        <h4 class="fragment">Inner state</h4>
-        <h4 class="fragment">Messages queue</h4>   
-        <h4 class="fragment">Message handling code</h4>
+        <h2>Actors, Scala</h2>
+        <img src="img/scala.png"/>
     </section>
     <section>
-        <h2> Actors can be used to control complex asynchronous flows within messages </h2>
-        <h2> Actors are good if you have a state, that needs to be managed </h2>
-        <h2> Actors are good for distributed systems </h2>
-        <h2> Actors can produce actors hierarchies </h2>
-        <h2> Actors are an explicit way to manage mutable state </h2>
+        
+        <h4> Actors are based on asynchronous messaging idea</h4>
+        <h4> It consists of:</h4>
+        <h4 class="fragment">Inner state</h4>
+        <h4 class="fragment">Messages queue</h4>   
+        <h4 class="fragment">Lambda</h4>
+    </section>
+    <section>
+        <h4> Actors can be used to control complex asynchronous flows</h4>
+        <h4> Actor is single threaded, and only serves one message at a time</h4>
+        <h4> Concept encourages non-blocking style</h4>
+    </section>
+    <section>
+        <h4> Actors are good if you need to isolate some state, even mutable </h4>
+        <h4> Actors are good for distributed systems </h4>
+        <h4> Actors can produce actors hierarchies </h4>
+        <h4> Actors are an explicit way to manage mutable state </h4>
     </section>
     <section>
         <h2>Rules of an actor</h2>
