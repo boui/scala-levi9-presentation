@@ -61,6 +61,7 @@
         <div>
             <h4>mail to: rocksyseletska2837@gmail.com</h4>
         </div>
+        <h3>github - boui </h3>
     </section>
     <section>
         <h3>Previous talk</h3>
@@ -71,8 +72,11 @@
 <section> 
     <h1> Major spoiler</h1>
     <h3> It is not about shared mutable state!</h3>
-    <h3 class="fragment"> We won't be talking about semaphores, mutexes, monitors or locks</h3>
-    <h3 class="fragment"> Well, maybe a bit</h3>
+    <h3 class="fragment"> We won't be talking about </h3>
+    <h3 class="fragment"> Semaphores </h3>
+    <h3 class="fragment"> Mutexes </h3>
+    <h3 class="fragment"> Monitors </h3>
+    <h3 class="fragment"> Locks </h3>
 </section>
 <section>    
     <h4>are you excited?</h4>
@@ -86,28 +90,32 @@
             <img src="img/sad_panda_painting.jpg" height="150px" />
         </div>
         <h4 class="fragment">Concurrent execution only means soma amount of tasks to be executed in some time frame</h4>
-        <h4 class="fragment">... but not neccesary at the same time</h4>
+        <h4 class="fragment">... but not neccesary silmutaniously</h4>
    </section>
    <section>
         <h4><span style="color:#4477AA">Concurrency</span> starts when you don't have enough cores for each process/thread</h4>               
-        <h4 class="fragment"><span style="color:#4477AA">Concurrency</span> is also a way to structure programm(Go approach)</h4>
+        <h4 class="fragment"><span style="color:#4477AA">Parrallel</span> processes represent real world easily</h4>
+        <h4 class="fragment"><span style="color:#4477AA">Concurent</span> is just a way to controll parrallel execution</h4>
     </section>
 </section>
 <section>
     <section>
         <h1> Native threads </h1>
         <div>
-            <h4 class="fragment"> Managed by OS, so this 'managment' implementation heavily depends on OS</h4>
+            <h4 class="fragment"> Managed by OS, so heavily depend on OS</h4>
             <h4 class="fragment"> Kernel-level sync on critical sections </h4>
-            <h4 class="fragment"> Really supports multiple CPUs <br/> if a system has n CPUs, then up to n threads can run simultaneously </h4>
+            <h4 class="fragment"> Really supports multiple CPUs </h4>
+            <h4 class="fragment"> If a system has n CPUs, then up to n threads can run simultaneously </h4>
         </div>
+    </section>
+    <section>
+        <h1>Scheduling</h1>
     </section>
     <section>
             <div >
                 <h2> Pre-emptive scheduling </h2>
                 <img class="fragment" src="img/pre.png"/>
             </div>
-            <h4 class="fragment"> Scheduler has prioraized queue of threads and switches time to time</h4>
     </section>
     <section>
         <div> 
